@@ -11,3 +11,4 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 home-security/home-security/bin/src/main/resources/application.properties
 home-security/home-security/bin/src/main/java/com/homesecurity/homesecurity/HomeSecurityApplication.class
+*.class
