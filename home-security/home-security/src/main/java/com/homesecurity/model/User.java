@@ -19,8 +19,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ftn.restaurant.model.Authority;
-import com.homesecurity.model.UserRole;
+
+import com.homesecurity.model.Authority;
 
 @Entity
 @Table(name = "system_user")
@@ -41,15 +41,13 @@ public class User implements UserDetails{
 	    @Column(name = "deleted", unique=false, nullable=false)
 	    private boolean deleted;
 
-	    @ManyToOne
-	    @JoinColumn(name = "role_id")
-	    private UserRole role;
+	    private String role;
 
 		public User() {
 			super();
 		}
 
-		public User(String username, String password, boolean deleted, com.homesecurity.model.UserRole role) {
+		public User(String username, String password, boolean deleted, String role) {
 			super();
 			this.username = username;
 			this.password = password;
@@ -81,11 +79,11 @@ public class User implements UserDetails{
 			this.deleted = deleted;
 		}
 
-		public UserRole getRole() {
+		public String getRole() {
 			return role;
 		}
 
-		public void setRole(UserRole role) {
+		public void setRole(String role) {
 			this.role = role;
 		}
 
@@ -96,7 +94,7 @@ public class User implements UserDetails{
 	    @Override
 	    public Collection<? extends GrantedAuthority> getAuthorities() {
 	        ArrayList<Authority> authorities = new ArrayList<Authority>();
-	        authorities.add(new Authority("ROLE_" + this.role.getName()));
+	        authorities.add(new Authority("ROLE_" + this.role));
 	        return authorities;
 	    }
 
