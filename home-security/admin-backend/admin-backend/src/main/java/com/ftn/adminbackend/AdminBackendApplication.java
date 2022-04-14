@@ -8,6 +8,7 @@ public class AdminBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AdminBackendApplication.class, args);
+		
 		System.out.println( "Hello World! :)" );
 	}
 

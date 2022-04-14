@@ -1,82 +1,95 @@
-// package com.ftn.adminbackend.service;
+package com.ftn.adminbackend.service;
 
-// import java.util.Optional;
+import java.util.List;
+import java.util.Optional;
 
-// import com.ftn.adminbackend.model.User;
+import com.ftn.adminbackend.model.User;
+import com.ftn.adminbackend.repository.UserRepository;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-// @Service
-// public class UserService implements UserDetailsService{
+@Service
+public class UserService implements UserDetailsService{
 
-//     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-// 	// @Autowired
-// 	// private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-// 	@Autowired
-// 	private PasswordEncoder passwordEncoder;
-
-// 	@Autowired
-// 	private AuthenticationManager authenticationManager;
-
-// 	private User user;
+    @Autowired
+	private PasswordEncoder passwordEncoder;
 
 
-// 	public UserService() {
-// 	}
+    public User findById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return user;
+    }
 
+    public User findByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        return user;
+    }
 
-// 	public UserService(User user) {
-//         this.user = user;
-//     }
-    
-//     @Override
-//     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//         Optional<User> maybeUser = Optional.of(new User("isidora", "savic", "admin"));//userRepository.findByUsername(username);
-// 		if (maybeUser.isPresent()) {
-// 			return maybeUser.get();
-// 		} else {
-// 			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
-// 		}
-//     }
+    public List<User> findAll() {
+        List<User> result = userRepository.findAll();
+        return result;
+    }
 
-// 	// public boolean changePassword(PasswordDTO passwordDTO) {
+    // public void updateUser(UserDTO userDTO) {
+    //     Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+    //     String username = currentUser.getName();
+    //     User user = (User) findByUsername(username);
 
-// 	// 	// Ocitavamo trenutno ulogovanog korisnika
-// 	// 	Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-// 	// 	String username = currentUser.getName();
+    //     user.setFirstName(userDTO.getFirstName());
+	// 	user.setLastName(userDTO.getLastName());
+	// 	user.setPhoneNumber(userDTO.getPhoneNumber());
+	// 	user.setEmail(userDTO.getEmail());
+    //     userRepository.save(user);
+    // }
+
+    // public String register(NewUserDTO userDTO, String siteURL) throws MessagingException, UnsupportedEncodingException {
+
+    //     List<User> sameUsernameOrEmailUsers = userRepository.findByUsernameOrEmail(userDTO.getUsername(), userDTO.getEmail());
+        
+    //     if(sameUsernameOrEmailUsers.size()!=0){
+    //         return "User with same username/email exists!";
+    //     }
+
+    //     Patient user = new Patient(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getUsername(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhoneNumber());
+        
+	// 	Address userAddress = new Address(userDTO.getStreet(), userDTO.getCity(), "", "", userDTO.getCountry());
+
+	// 	addressRepository.saveAndFlush(userAddress);
+
+	// 	user.setAddress(userAddress);
 		
-// 	// 	if (authenticationManager != null) {
-// 	// 		LOG.info("Re-authenticating user '" + username + "' for password change request.");
-// 	// 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, passwordDTO.getOldPassword()));
-// 	// 	} else {
-// 	// 		LOG.info("No authentication manager set. can't change Password!");
-// 	// 		return false;
-// 	// 	}
+	// 	String randomCode = RandomString.make(64);
+    //     VerificationCode verificationCode = new VerificationCode(randomCode, user, false, LocalDate.now());
+    //     verificationCodeRepository.save(verificationCode);
+    //     user.setVerificationCode(verificationCode);
+        		
+	// 	userRepository.saveAndFlush(user);
+    //     verificationCodeRepository.saveAndFlush(verificationCode);
+	// 	sendVerificationEmail(user, siteURL);
+    //     return "Verification link has been sent to your email!";
+    // }
 
-// 	// 	LOG.info("Changing password of the user '" + username + "'");
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findAdminByUsernameAndDeletedIsFalseAndRole(username, "ADMIN");
+        if(user.isPresent()){
+            return user.get();
+        }
+        throw new UsernameNotFoundException("No such user exists");
+    }
 
-// 	// 	User user = (User) loadUserByUsername(username);
 
-// 	// 	// pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
-// 	// 	// ne zelimo da u bazi cuvamo lozinke u plain text formatu
-// 	// 	user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-// 	// 	if(user.isNeedsToChangePassword()) user.setNeedsToChangePassword(false);
-// 	// 	userRepository.save(user);
-// 	// 	return true;
-// 	// }
-
-//     // public boolean isEnabled() {
-//     //     return user.isEnabled();
-//     // }
-    
-// }
+}
