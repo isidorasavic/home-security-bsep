@@ -91,10 +91,9 @@ public class TokenUtils {
 		return refreshedToken;
 	}
 
-	public boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-		final Date created = this.getIssuedAtDateFromToken(token);
-		return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
-				&& (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
+	public boolean canTokenBeRefreshed(String token) {
+		// final Date created = this.getIssuedAtDateFromToken(token);
+		return ((!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
 	}
 
 	// Funkcija za validaciju JWT tokena
@@ -103,8 +102,7 @@ public class TokenUtils {
 		final String username = getUsernameFromToken(token);
 		final Date created = getIssuedAtDateFromToken(token);
 
-		//TODO: dodati is not deleted!
-		return (username != null && username.equals(userDetails.getUsername()));
+		return (username != null && username.equals(userDetails.getUsername()) && !user.isDeleted());
 	}
 
 	public String getUsernameFromToken(String token) {

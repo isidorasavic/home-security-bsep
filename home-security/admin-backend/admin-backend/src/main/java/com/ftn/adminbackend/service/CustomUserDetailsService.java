@@ -4,6 +4,7 @@ package com.ftn.adminbackend.service;
 import java.util.Optional;
 
 import com.ftn.adminbackend.model.User;
+import com.ftn.adminbackend.repository.UserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService{
 
     private static final Logger LOG = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
-	// @Autowired
-	// private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -42,7 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService{
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> maybeUser = Optional.of(new User("", "", ""));//.findByUsername(username);
+        Optional<User> maybeUser = userRepository.findByUsername(username);
 		if (maybeUser.isPresent()) {
 			return maybeUser.get();
 		} else {
