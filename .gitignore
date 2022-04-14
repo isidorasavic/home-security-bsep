@@ -9,3 +9,6 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+home-security/home-security/bin/src/main/resources/application.properties
+home-security/home-security/bin/src/main/java/com/homesecurity/homesecurity/HomeSecurityApplication.class
+*.class

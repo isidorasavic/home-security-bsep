@@ -1,14 +1,14 @@
-package com.homesecurity.homesecurity;
+package com.ftn.adminbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HomeSecurityApplication {
+public class AdminBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HomeSecurityApplication.class, args);
-		System.out.println( "Hello World!" );
+		SpringApplication.run(AdminBackendApplication.class, args);
+		System.out.println( "Hello World! :)" );
 	}
 
 }
