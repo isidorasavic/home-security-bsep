@@ -2,12 +2,6 @@ package com.ftn.adminbackend.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import net.bytebuddy.utility.RandomString;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
