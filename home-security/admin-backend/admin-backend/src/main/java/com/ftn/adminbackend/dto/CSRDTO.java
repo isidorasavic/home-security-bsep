@@ -9,18 +9,15 @@ public class CSRDTO {
     private String S;
     private String C;
     private String emailAddress;
-    private String publicKey;
     private String username;
-    private String givenName;
-    private String surname;
     
 	public CSRDTO() {
 		super();
 	}
 
 
-	public CSRDTO(String cN, String o, String oU, String l, String s, String c, String emailAddress, String publicKey,
-			String username, String givenName, String surname) {
+	public CSRDTO(String cN, String o, String oU, String l, String s, String c, String emailAddress,
+			String username) {
 		super();
 		CN = cN;
 		O = o;
@@ -29,30 +26,22 @@ public class CSRDTO {
 		S = s;
 		C = c;
 		this.emailAddress = emailAddress;
-		this.publicKey = publicKey;
 		this.username = username;
-		this.givenName = givenName;
-		this.surname = surname;
 	}
 
 
-	public String getGivenName() {
-		return givenName;
-	}
-
-
-	public void setGivenName(String givenName) {
-		this.givenName = givenName;
-	}
-
-
-	public String getSurname() {
-		return surname;
-	}
-
-
-	public void setSurname(String surname) {
-		this.surname = surname;
+	@Override
+	public String toString() {
+		return "{" +
+			" CN='" + getCN() + "'" +
+			", O='" + getO() + "'" +
+			", OU='" + getOU() + "'" +
+			", L='" + getL() + "'" +
+			", S='" + getS() + "'" +
+			", C='" + getC() + "'" +
+			", emailAddress='" + getEmailAddress() + "'" +
+			", username='" + getUsername() + "'" +
+			"}";
 	}
 
 
@@ -110,14 +99,6 @@ public class CSRDTO {
 
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
-	}
-
-	public String getPublicKey() {
-		return publicKey;
-	}
-
-	public void setPublicKey(String publicKey) {
-		this.publicKey = publicKey;
 	}
 
 	public String getUsername() {

@@ -15,14 +15,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ftn.adminbackend.dto.CSRDTO;
+import com.ftn.adminbackend.model.CSR;
+import com.ftn.adminbackend.model.RegularUser;
 import com.ftn.adminbackend.model.SubjectData;
+import com.ftn.adminbackend.model.User;
 import com.ftn.adminbackend.repository.CSRRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class CSRService {
 
     @Autowired
     private CSRRepository csrRepository;
+
+    private static final Logger LOG = LoggerFactory.getLogger(CSRService.class);
+
+
+    @Autowired
+    private UserService userService;
 
     public String generateCSR(CSRDTO csr){
         try {
@@ -34,31 +47,33 @@ public class CSRService {
             Date startDate = iso8601Formater.parse(now.toString());
             Date endDate = iso8601Formater.parse(now.withYear(now.getYear()+5).toString());
 
+            RegularUser user = userService.findRegularUserForCSR(csr.getUsername());
+
             // Serijski broj sertifikata
             // TODO: sigurno izmeniti :')
             String sn = "1";
 
+            LOG.info(csr.toString());
+
             // klasa X500NameBuilder pravi X500Name objekat koji predstavlja podatke o vlasniku
             X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
             builder.addRDN(BCStyle.CN, csr.getCN());
-            builder.addRDN(BCStyle.SURNAME, csr.getSurname());
-            builder.addRDN(BCStyle.GIVENNAME, csr.getGivenName());
+            builder.addRDN(BCStyle.SURNAME, user.getSurname());
+            builder.addRDN(BCStyle.GIVENNAME, user.getName());
             builder.addRDN(BCStyle.O, csr.getO());
             builder.addRDN(BCStyle.OU, csr.getOU());
             builder.addRDN(BCStyle.C, csr.getC());
             builder.addRDN(BCStyle.E, csr.getEmailAddress());
+            builder.addRDN(BCStyle.L, csr.getL());
+
             // TODO: mozda izmeniti
-            builder.addRDN(BCStyle.UID, csr.getUsername());
+            builder.addRDN(BCStyle.UID, String.valueOf(user.getId()));
 
-            // Kreiraju se podaci za sertifikat, sto ukljucuje:
-            // - javni kljuc koji se vezuje za sertifikat
-            // - podatke o vlasniku
-            // - serijski broj sertifikata
-            // - od kada do kada vazi sertifikat
             SubjectData sd = new SubjectData(keyPairSubject.getPublic(), builder.build(), sn, startDate, endDate);
-
-            // CSR csrFile = new CSR(sn, sd.toString(), false);
-            // csrRepository.save(csrFile);
+            LOG.info(sd.toString());
+            
+            CSR csrFile = new CSR(sn, sd.toString(), false);
+            csrRepository.save(csrFile);
 
             return sd.toString();
         } catch (ParseException e) {

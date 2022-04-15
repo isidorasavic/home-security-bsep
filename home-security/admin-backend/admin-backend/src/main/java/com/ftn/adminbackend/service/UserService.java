@@ -3,13 +3,14 @@ package com.ftn.adminbackend.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ftn.adminbackend.model.RegularUser;
 import com.ftn.adminbackend.model.User;
+import com.ftn.adminbackend.repository.RegularUserRepository;
 import com.ftn.adminbackend.repository.UserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +27,10 @@ public class UserService implements UserDetailsService{
 
     @Autowired
 	private PasswordEncoder passwordEncoder;
+
+
+    @Autowired
+    private RegularUserRepository regularUserRepository;
 
 
     public User findById(Long id) {
@@ -89,6 +94,14 @@ public class UserService implements UserDetailsService{
             return user.get();
         }
         throw new UsernameNotFoundException("No such user exists");
+    }
+
+    public RegularUser findRegularUserForCSR(String username){
+        Optional<RegularUser> user = regularUserRepository.findByUsername(username);
+        if(user.isPresent()) {
+            return user.get();
+        }
+        throw new UsernameNotFoundException("No such user exists!");
     }
 
 

@@ -9,11 +9,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CSRRepository extends MongoRepository<CSRRepository, Integer>{
+public interface CSRRepository extends MongoRepository<CSR, Integer>{
     
 
     List<CSR> findByIsDeletedIsFalse();
 
-    Optional<CSR> findBySNAndIsDeletedIsFalse(String sn);
+    Optional<CSR> findBysnAndIsDeletedIsFalse(String sn);
 
 }

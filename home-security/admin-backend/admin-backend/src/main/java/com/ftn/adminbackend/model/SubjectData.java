@@ -65,4 +65,9 @@ public class SubjectData {
         this.endDate = endDate;
     }
 
+    @Override
+    public String toString() {
+        return "x500: " + this.x500name.toString() + " date:" + this.startDate;
+    }
+
 }
