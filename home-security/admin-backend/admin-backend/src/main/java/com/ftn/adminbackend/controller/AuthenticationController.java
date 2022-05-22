@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ftn.adminbackend.model.User;
+import com.ftn.adminbackend.model.UserTokenState;
 import com.ftn.adminbackend.security.TokenUtils;
 import com.ftn.adminbackend.security.authentication.JwtAuthenticationRequest;
 import com.ftn.adminbackend.service.CustomUserDetailsService;
@@ -22,7 +23,9 @@ import com.ftn.adminbackend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,7 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping(value = "/api/authentication", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
@@ -50,7 +53,7 @@ public class AuthenticationController {
 
     //log in endpoint
     @PostMapping("/login")
-	public void createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
+	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) {
 
 		LOG.info("Received request for login");
@@ -69,18 +72,21 @@ public class AuthenticationController {
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
-		String jwt = tokenUtils.generateToken(user.getUsername());
+        String fingerprint = tokenUtils.generateFingerprint();
+        String jwt = tokenUtils.generateToken(user.getUsername(), fingerprint);
+        int expiresIn = tokenUtils.getExpiredIn();
 
-		// Create a cookie
-		Cookie cookie = new Cookie("accessToken", jwt);
-		cookie.setMaxAge(7 * 24 * 60 * 60); // Expires in 7 days
-		// cookie.setSecure(true);
-		cookie.setHttpOnly(true);
-		cookie.setPath("/"); // Global cookie accessible everywhere
+        // Kreiraj cookie
+        // String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
+        String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
 
-		// Add cookie to response
-		response.addCookie(cookie);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", cookie);
+
+        // Vrati token kao odgovor na uspesnu autentifikaciju
+        return ResponseEntity.ok().headers(headers).body(new UserTokenState(jwt, expiresIn));
 	}
+
 
 	@PostMapping("/logout")
 	public void logout(HttpServletResponse response) {
@@ -95,23 +101,23 @@ public class AuthenticationController {
 		response.addCookie(cookie);
 	}
 
-    //refresh endpoint
-    @PostMapping(value = "/refresh")
-	public void refreshAuthenticationToken(HttpServletRequest request) {
+    // //refresh endpoint
+    // @PostMapping(value = "/refresh")
+	// public void refreshAuthenticationToken(HttpServletRequest request) {
 
-		String token = tokenUtils.getToken(request);
-		String username = this.tokenUtils.getUsernameFromToken(token);
-		User user = (User) this.userDetailsService.loadUserByUsername(username);
+	// 	String token = tokenUtils.getToken(request);
+	// 	String username = this.tokenUtils.getUsernameFromToken(token);
+	// 	User user = (User) this.userDetailsService.loadUserByUsername(username);
 
-		if (this.tokenUtils.canTokenBeRefreshed(token)) {
-			String jwt = tokenUtils.refreshToken(token);
-			Cookie cookie = new Cookie("accessToken", jwt);
-			cookie.setMaxAge(7 * 24 * 60 * 60); // Expires in 7 days
-			// cookie.setSecure(true);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/"); // Global cookie accessible everywhere
-		}
-	}
+	// 	if (this.tokenUtils.canTokenBeRefreshed(token)) {
+	// 		String jwt = tokenUtils.refreshToken(token);
+	// 		Cookie cookie = new Cookie("accessToken", jwt);
+	// 		cookie.setMaxAge(7 * 24 * 60 * 60); // Expires in 7 days
+	// 		// cookie.setSecure(true);
+	// 		cookie.setHttpOnly(true);
+	// 		cookie.setPath("/"); // Global cookie accessible everywhere
+	// 	}
+	// }
 
     // @PreAuthorize("hasRole('USER')")
     // @PutMapping(path = "/change-password")

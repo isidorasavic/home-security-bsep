@@ -64,14 +64,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
         .and()
             .authorizeRequests()
-				.antMatchers("/api/**").permitAll()
+				.antMatchers("/api/**").permitAll() // TODO: ispraviti
                 .anyRequest().authenticated() // protect all other requests
 		.and()
 			.cors()
 		.and()
 			// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
-			// .addFilterBefore(new FrontendRedirectFilter(), TokenAuthenticationFilter.class);
+		http
+			.headers()
+			.xssProtection()
+			.and()
+			.contentSecurityPolicy("script-src 'self'");
+			
 
 		http.csrf().disable(); // disable cross site request forgery, as we don't use cookies - otherwise ALL PUT, POST, DELETE will get HTTP 403!
     }
@@ -80,6 +85,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
-		web.ignoring().regexMatchers(HttpMethod.GET, "/((?!api).*)");
+		web.ignoring().regexMatchers(HttpMethod.GET, "/((?!api).*)"); //TODO: izbrisati
+		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
+				"/**/*.css", "/**/*.js");
+		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
 	}
 }
