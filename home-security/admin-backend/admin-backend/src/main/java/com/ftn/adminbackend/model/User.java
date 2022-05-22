@@ -94,6 +94,12 @@ public class User implements UserDetails{
         if (role.equalsIgnoreCase("ADMIN")) {
             authorities.add(new Authority("ROLE_ADMIN"));
         }
+        if (role.equalsIgnoreCase("OWNER")) {
+            authorities.add(new Authority("ROLE_OWNER"));
+        }
+        if (role.equalsIgnoreCase("TENANT")) {
+            authorities.add(new Authority("ROLE_TENANT"));
+        }
         return authorities;
     }
 
