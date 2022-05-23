@@ -96,7 +96,7 @@ public class UserService implements UserDetailsService{
         if(!userRepository.findByUsername(userDTO.getUsername()).isEmpty()){
             throw new UserAlreadyExists("Username is taken!");
         }
-        if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT")){
+        if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("ADMIN")){
             throw new RoleNotFound("Role not found!");
         }
         User newUser = new User();

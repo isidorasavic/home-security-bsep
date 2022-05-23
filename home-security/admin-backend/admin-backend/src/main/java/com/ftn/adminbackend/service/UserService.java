@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,6 +30,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UserService implements UserDetailsService{
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -66,6 +69,7 @@ public class UserService implements UserDetailsService{
 
         User newUser = new User(userDTO);
         newUser.setId(userRepository.findAll().size()+1);
+        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userRepository.save(newUser);
 
         //koji god korisnik da se doda, on ce se slati i na MyHouse bek da bi tamo mogao da se uloguuje
