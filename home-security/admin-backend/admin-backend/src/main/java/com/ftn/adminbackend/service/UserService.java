@@ -1,16 +1,30 @@
 package com.ftn.adminbackend.service;
 
+import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.ftn.adminbackend.dto.UserDTO;
+import com.ftn.adminbackend.exception.RoleNotFound;
+import com.ftn.adminbackend.exception.UserExistsException;
 import com.ftn.adminbackend.model.User;
 import com.ftn.adminbackend.repository.UserRepository;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+
 
 @Service
 public class UserService implements UserDetailsService{
@@ -34,44 +48,46 @@ public class UserService implements UserDetailsService{
         return result;
     }
 
-    // public void updateUser(UserDTO userDTO) {
-    //     Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-    //     String username = currentUser.getName();
-    //     User user = (User) findByUsername(username);
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
-    //     user.setFirstName(userDTO.getFirstName());
-	// 	user.setLastName(userDTO.getLastName());
-	// 	user.setPhoneNumber(userDTO.getPhoneNumber());
-	// 	user.setEmail(userDTO.getEmail());
-    //     userRepository.save(user);
-    // }
+    public static String BASE_URL = "http://localhost:8081/api";
 
-    // public String register(NewUserDTO userDTO, String siteURL) throws MessagingException, UnsupportedEncodingException {
+	public static String URL_ENCODING = "UTF-8";
 
-    //     List<User> sameUsernameOrEmailUsers = userRepository.findByUsernameOrEmail(userDTO.getUsername(), userDTO.getEmail());
+    public UserDTO addUser(UserDTO userDTO) throws Exception{
         
-    //     if(sameUsernameOrEmailUsers.size()!=0){
-    //         return "User with same username/email exists!";
-    //     }
+        if(userRepository.findAdminByUsernameAndDeletedIsFalse(userDTO.getUsername()).isPresent()){
+            throw new UserExistsException("Username is taken!");
+        }
 
-    //     Patient user = new Patient(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getUsername(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getPhoneNumber());
-        
-	// 	Address userAddress = new Address(userDTO.getStreet(), userDTO.getCity(), "", "", userDTO.getCountry());
+        if(!userDTO.getRole().equals("OWNER") && !userDTO.getRole().equalsIgnoreCase("TENANT")&& !userDTO.getRole().equalsIgnoreCase("ADMIN")){
+            throw new RoleNotFound("Role not found!");
+        }
 
-	// 	addressRepository.saveAndFlush(userAddress);
+        User newUser = new User(userDTO);
+        newUser.setId(userRepository.findAll().size()+1);
+        userRepository.save(newUser);
 
-	// 	user.setAddress(userAddress);
-		
-	// 	String randomCode = RandomString.make(64);
-    //     VerificationCode verificationCode = new VerificationCode(randomCode, user, false, LocalDate.now());
-    //     verificationCodeRepository.save(verificationCode);
-    //     user.setVerificationCode(verificationCode);
-        		
-	// 	userRepository.saveAndFlush(user);
-    //     verificationCodeRepository.saveAndFlush(verificationCode);
-	// 	sendVerificationEmail(user, siteURL);
-    //     return "Verification link has been sent to your email!";
-    // }
+        //koji god korisnik da se doda, on ce se slati i na MyHouse bek da bi tamo mogao da se uloguuje
+        //ako se doda novi korisnik u MyHouse, on ce biti poslat ovde da bi admin mogao da ga vidi (ovo vrv ne treba ali nema veze)
+        String url = BASE_URL + "/user/addUser";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        URI uri = new URI(url);
+
+        HttpEntity<UserDTO> httpEntity = new HttpEntity<>(userDTO, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        UserDTO userDTO2 = restTemplate.postForObject(uri, httpEntity, UserDTO.class);
+        LOG.info("Finished comunicating with MyHouse. Response: " + userDTO2);
+        return userDTO;
+
+    }
+
+    public static String getStringFromInputStream(InputStream in) throws Exception {
+		return new String(IOUtils.toByteArray(in), URL_ENCODING);
+	}
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -6,17 +6,17 @@ public class UserDTO {
     
     private long id;
     private String username;
+    private String role;
     private String password;
     private String firstName;
     private String lastName;
-    private Boolean deleted;
-    private String role;
+    private boolean deleted;
 
 
     public UserDTO() {
     }
 
-    public UserDTO(long id, String username, String firstName, String lastName, Boolean deleted, String role) {
+    public UserDTO(long id, String username, String firstName, String lastName, boolean deleted, String role) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -66,7 +66,7 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public Boolean isDeleted() {
+    public boolean isDeleted() {
         return this.deleted;
     }
 
@@ -98,7 +98,7 @@ public class UserDTO {
         return this;
     }
 
-    public UserDTO deleted(Boolean deleted) {
+    public UserDTO deleted(boolean deleted) {
         setDeleted(deleted);
         return this;
     }
@@ -117,6 +117,19 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", username='" + getUsername() + "'" +
+            ", password='" + getPassword() + "'" +
+            ", firstName='" + getFirstName() + "'" +
+            ", lastName='" + getLastName() + "'" +
+            ", deleted='" + isDeleted() + "'" +
+            ", role='" + getRole() + "'" +
+            "}";
     }
 
 }

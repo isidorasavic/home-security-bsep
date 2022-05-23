@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ftn.adminbackend.dto.UserDTO;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,6 +23,8 @@ public class User implements UserDetails{
     protected long id;
     protected String username;
     protected String password;
+    protected String firstName;
+    protected String lastName;
     protected String role;
     private boolean deleted;
 
@@ -42,6 +45,25 @@ public class User implements UserDetails{
         this.role = role;
         this.deleted = deleted;
     }
+
+    public User(UserDTO userDTO){
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+        this.role = userDTO.getRole();
+        this.deleted = false;
+    }
+
+
+    public User(long id, String username, String password, String firstName, String lastName, String role, boolean deleted) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.deleted = deleted;
+    }
+
 
     @Override
     public String toString() {
@@ -86,6 +108,30 @@ public class User implements UserDetails{
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public boolean getDeleted() {
+        return this.deleted;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
 	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

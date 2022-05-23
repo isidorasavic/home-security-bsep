@@ -27,10 +27,10 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     protected String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     protected String lastName;
 
     @Column(name = "username", nullable = false)
