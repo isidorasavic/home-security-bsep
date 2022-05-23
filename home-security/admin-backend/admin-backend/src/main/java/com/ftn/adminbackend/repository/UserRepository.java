@@ -15,6 +15,9 @@ public interface UserRepository extends MongoRepository<User, Integer>{
 	@Query("{username:?0, deleted:false, role:?1}")
 	Optional<User> findAdminByUsernameAndDeletedIsFalseAndRole(String username, String role);
 
+	@Query("{username:?0, deleted:false}")
+	Optional<User> findAdminByUsernameAndDeletedIsFalse(String username);
+
 	Optional<User> findByUsername(String username);
 
     Optional<User> findById(long id);

@@ -18,11 +18,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class UserService implements UserDetailsService{
 
-
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     @Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -89,10 +92,11 @@ public class UserService implements UserDetailsService{
     }
 
     public UserDTO addUser(UserDTO userDTO){
+        LOG.info("Recieved request to add user: "+userDTO.toString());
         if(!userRepository.findByUsername(userDTO.getUsername()).isEmpty()){
             throw new UserAlreadyExists("Username is taken!");
         }
-        if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT")){
+        if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("ADMIN")){
             throw new RoleNotFound("Role not found!");
         }
         User newUser = new User();
