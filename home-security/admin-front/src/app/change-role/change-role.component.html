@@ -1,0 +1,13 @@
+<form [formGroup]="profileForm">
+    <label for="username">Username: </label>
+    <input required id="username" type="text" formControlName="username">
+    <br />
+    <label for="role">Role: </label>
+    <select required id="role" type="text" formControlName="role">
+      <option value="OWNER">OWNER</option>
+      <option value="ADMIN">ADMIN</option>
+      <option value="TENANT">TENANT</option>
+    </select>
+    <br />
+    <button type="submit" (click)="addUser()">Change</button>
+  </form>

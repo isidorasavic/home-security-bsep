@@ -8,11 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -28,13 +24,15 @@ public class UserController {
     private UserService userService;
 
 
-    @PostMapping("/addUser")
-    @ResponseBody
+    @RequestMapping( value = "/addUser",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO addUser(@RequestBody UserDTO newUser) throws Exception{
         LOG.info("Recieved request to add new user: "+newUser.getUsername());
+        System.out.println(newUser.toString());
         return userService.addUser(newUser);
 
     }
 
-    
+
 }

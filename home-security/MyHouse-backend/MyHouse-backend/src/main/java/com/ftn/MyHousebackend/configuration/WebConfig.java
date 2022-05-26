@@ -11,12 +11,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     // TODO: kad dodje front odkomentarisati
     // Za svrhe razvoja konfigurisemo dozvolu za CORS kako ne bismo morali @CrossOrigin anotaciju da koristimo nad svakim kontrolerom
-    // @Override
-    // public void addCorsMappings(CorsRegistry registry) {
-    //     registry.addMapping("/**")
-    //             .allowedOrigins("http://localhost:4200", "http://localhost:4201")
-    //             .allowedMethods("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH")
-    //             .allowedHeaders("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization")
-    //             .allowCredentials(true);
-    // }
+     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+         registry.addMapping("/**")
+                 .allowedOrigins("http://localhost:4001", "http://localhost:4002")
+                 .allowedMethods("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH")
+                 .allowedHeaders("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization")
+                 .allowCredentials(true);
+     }
 }

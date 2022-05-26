@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService{
         newUser.setId(userRepository.findAll().size()+1);
         newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userRepository.save(newUser);
-
+        System.out.println(newUser.toString());
         //koji god korisnik da se doda, on ce se slati i na MyHouse bek da bi tamo mogao da se uloguuje
         //ako se doda novi korisnik u MyHouse, on ce biti poslat ovde da bi admin mogao da ga vidi (ovo vrv ne treba ali nema veze)
         String url = BASE_URL + "/user/addUser";
