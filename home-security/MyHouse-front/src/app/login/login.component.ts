@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,7 +18,7 @@ export class LoginComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
   roles: string[] = [];
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) {
+  constructor(private toastr: ToastrService, private authService: AuthService, private tokenStorage: TokenStorageService, public router: Router) {
    }
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -26,17 +29,17 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     const { username, password } = this.form;
     this.authService.login(username, password).subscribe({
-      next: data => {
+      next: (data: any) => {
+        console.log(data);
         this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUser(data);
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.roles = this.tokenStorage.getUser().roles;
-        this.reloadPage();
-    },
-    error: err => {
-      alert("error");
-      this.errorMessage = err.error?.["message"];
+        this.tokenStorage.saveUser(data.username);
+        this.tokenStorage.saveUserRole(data.role);
+        //TODO: u zavisnosti od tipa korisnika, redirectuje na druga mesta
+        this.router.navigate(['/home']);
+      },
+    error: (err: any) => {
+      console.log(err.error)
+      this.errorMessage = "Bad creditentials!";  //TODO: ulepsati jer je gadno hehe
       this.isLoginFailed = true;
     }
   });

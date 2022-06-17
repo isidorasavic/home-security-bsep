@@ -9,6 +9,7 @@ import javax.management.relation.RoleNotFoundException;
 import com.ftn.MyHousebackend.dto.UserDTO;
 import com.ftn.MyHousebackend.exception.RoleNotFound;
 import com.ftn.MyHousebackend.exception.UserAlreadyExists;
+import com.ftn.MyHousebackend.exception.UserNotFoundException;
 import com.ftn.MyHousebackend.model.User;
 import com.ftn.MyHousebackend.repository.UserRepository;
 
@@ -55,7 +56,7 @@ public class UserService implements UserDetailsService{
         if(user.isPresent()){
             return user.get();
         }
-        throw new UsernameNotFoundException("No such user exists");
+        throw new UserNotFoundException("User not found!");
     }
 
     public List<UserDTO> searchUsers(String searchWord){
@@ -92,9 +93,9 @@ public class UserService implements UserDetailsService{
     }
 
     public UserDTO addUser(UserDTO userDTO){
-        LOG.info("Recieved request to add user: "+userDTO.toString());
+        LOG.info("Recived request to add user: "+userDTO.toString());
         if(!userRepository.findByUsername(userDTO.getUsername()).isEmpty()){
-            throw new UserAlreadyExists("Username is taken!");
+            throw new UserAlreadyExists("Username "+userDTO.getUsername()+" is taken!");
         }
         if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("ADMIN")){
             throw new RoleNotFound("Role not found!");
@@ -110,6 +111,12 @@ public class UserService implements UserDetailsService{
         userRepository.saveAndFlush(newUser);
         return userDTO;
 
+    }
+
+    public User findUserById(long id) {
+        Optional<User> optUser = userRepository.findById(id);
+        if(optUser.isPresent())return optUser.get();
+        throw new UserNotFoundException("User not found!");
     }
 
 }

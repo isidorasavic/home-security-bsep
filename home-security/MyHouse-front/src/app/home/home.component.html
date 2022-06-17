@@ -1,5 +1,23 @@
-<div class="container">
-    <header class="jumbotron">
-      <p>{{ content }}</p>
-    </header>
+<div class="home-component">
+  <div class="object-content-div">
+    <div class="my-objects-title-div">
+      My objects
+    </div>
+    <div>
+      <div *ngFor="let object of objectsList; let i = index" class="object-list-elem">
+        <button class="btn btn-block" (click)="selectObject(i)">
+          {{object.name}}
+        </button>
+      </div>
+    </div>
   </div>
+  <div class="object-content-div">
+    <div class='object-title-div'>
+      {{selectedObject.name}}
+    </div>
+  </div>
+  <div class="object-content-div">
+
+  </div>
+
+</div>

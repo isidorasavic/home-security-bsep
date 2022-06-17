@@ -12,3 +12,7 @@ INSERT INTO USERS (first_name, last_name, username, password, role, deleted) VAL
  INSERT INTO USERS (first_name, last_name, username, password, role, deleted) VALUES
  ('Isidora5', 'Savic5', 'isidora5', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'TENANT', true);
 
+insert into objects (name, type, owner_id) values ('kuca1', 'House', 1);
+insert into objects (name, type, owner_id) values ('kuca2', 'House', 1);
+insert into objects (name, type, owner_id) values ('kuca3', 'House', 1);
+insert into objects (name, type, owner_id) values ('kuca4', 'House', 1);

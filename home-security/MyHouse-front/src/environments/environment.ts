@@ -2,8 +2,14 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { ThisReceiver } from '@angular/compiler';
+
 export const environment = {
-  production: false
+  production: false,
+  BASE_PATH: 'http://localhost:8081/api/',
+  LOGIN_PATH: 'auth/login',
+  SIGNUP_PATH:  'auth/signup'
+
 };
 
 /*

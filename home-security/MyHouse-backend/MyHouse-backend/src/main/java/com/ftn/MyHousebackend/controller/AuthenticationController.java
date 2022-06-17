@@ -58,8 +58,6 @@ public class AuthenticationController {
 			HttpServletResponse response) {
 
 		LOG.info("Received request for login");
-        LOG.info("username: "+authenticationRequest.getUsername());
-        LOG.info("password: "+authenticationRequest.getPassword());
 
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
@@ -77,6 +75,10 @@ public class AuthenticationController {
         String jwt = tokenUtils.generateToken(user.getUsername(), fingerprint);
         int expiresIn = tokenUtils.getExpiredIn();
 
+		UserTokenState userTokenState = new UserTokenState(jwt, expiresIn);
+		userTokenState.setUsername(user.getUsername());
+		userTokenState.setRoles(user.getRole());
+
         // Kreiraj cookie
         // String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
         String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
@@ -85,7 +87,7 @@ public class AuthenticationController {
         headers.add("Set-Cookie", cookie);
 
         // Vrati token kao odgovor na uspesnu autentifikaciju
-        return ResponseEntity.ok().headers(headers).body(new UserTokenState(jwt, expiresIn));
+        return ResponseEntity.ok().headers(headers).body(userTokenState);
 	}
 
 	@PostMapping("/logout")

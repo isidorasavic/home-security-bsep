@@ -1,9 +1,21 @@
 package com.ftn.MyHousebackend.model;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
 public class UserTokenState {
 	
     private String accessToken;
     private Long expiresIn;
+
+    private String username;
+
+    private String roles;
 
     public UserTokenState() {
         this.accessToken = null;
@@ -15,20 +27,4 @@ public class UserTokenState {
         this.expiresIn = expiresIn;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public Long getExpiresIn() {
-        return expiresIn;
-    }
-
-    public void setExpiresIn(Long expiresIn) {
-        this.expiresIn = expiresIn;
-    }
-    
 }

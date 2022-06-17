@@ -1,0 +1,41 @@
+.home-component {
+    margin-left: 0;
+    width: 100vw;
+    height: 93vh;
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
+}
+
+.object-content-div {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    outline: black solid 1px;
+    background-color: #e5e3e3;
+}
+
+
+.my-objects-title-div {
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+
+}
+
+.objects-list {
+    width: 100%;
+    text-align: center;
+
+}
+
+.btn {
+    width: 40%;
+    display: block;
+    margin: auto;
+    font-size: 20px;
+}
+
+.object-title-div {
+    font-size: 50px;
+    text-align: center;
+}

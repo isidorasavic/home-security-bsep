@@ -2,6 +2,7 @@ package com.ftn.MyHousebackend.service;
 
 import java.util.Optional;
 
+import com.ftn.MyHousebackend.exception.UserNotFoundException;
 import com.ftn.MyHousebackend.model.User;
 import com.ftn.MyHousebackend.repository.UserRepository;
 
@@ -34,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 		if (maybeUser.isPresent()) {
 			return maybeUser.get();
 		} else {
-			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+			throw new UserNotFoundException(String.format("No user found with username '%s'.", username));
 		}
     }
 }
