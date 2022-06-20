@@ -23,7 +23,6 @@ public class ObjectDTO {
         this.name = object.getName();
         this.type = object.getObjectType().name();
         this.owner = new UserDTO(object.getOwner());
-//        List<UserDTO> tenantlist = new ArrayList<>();
         object.getTenants().forEach(tenant -> {
             this.tenants.add(new UserDTO(tenant));
         });

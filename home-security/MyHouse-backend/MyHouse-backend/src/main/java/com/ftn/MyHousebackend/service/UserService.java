@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService{
 
     public UserDTO addUser(UserDTO userDTO){
         LOG.info("Recived request to add user: "+userDTO.toString());
-        if(!userRepository.findByUsername(userDTO.getUsername()).isEmpty()){
+        if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
             throw new UserAlreadyExists("Username "+userDTO.getUsername()+" is taken!");
         }
         if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("ADMIN")){

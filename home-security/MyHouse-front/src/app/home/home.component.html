@@ -15,9 +15,36 @@
     <div class='object-title-div'>
       {{selectedObject.name}}
     </div>
+    <div class="object-type-div">
+      {{selectedObject.type}}
+    </div>
+    <div class="messages-div">
+      <table class="messages-table">
+        <tr>
+          <th></th>
+          <th>Device</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+        <tr *ngFor="let message of messagesList; let i = index" [class]="message.messageType">
+          <td>{{i+1}}.</td>
+          <td>{{message.device.name}}</td>
+          <td>{{message.message}}</td>
+          <td>{{message.date}}</td>
+          <td>{{message.time}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
   <div class="object-content-div">
-
+    <div class="select-device-div">
+      <p>Select device</p>
+      <select name="device" id="device" [(ngModel)]="selectedDevice" (change)="getDeviceMessages()">
+        <option [value]="-1">All devices</option>
+        <option *ngFor="let device of devicesList" [value]="device.id">{{device.name}}</option>
+      </select>
+    </div>
   </div>
 
 </div>

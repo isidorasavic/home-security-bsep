@@ -15,6 +15,18 @@ export class ObjectService {
         return this.http.get(environment.BASE_PATH+'owner/'+username+'/objects', httpOptions);
     }
 
+    getObjectMessages(objectId: number): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'object/'+objectId+'/messages', httpOptions);
+    }
+
+    getDeviceMessages(deviceId: number): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'device/'+deviceId+'/messages', httpOptions);
+    }
+
+    getObjectDevices(objectId: number): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'object/'+objectId+'/devices', httpOptions);
+    }
+
 //   login(username: string, password: string): Observable<any> {
 //     return this.http.post(environment.BASE_PATH+environment.LOGIN_PATH, {
 //       username,
