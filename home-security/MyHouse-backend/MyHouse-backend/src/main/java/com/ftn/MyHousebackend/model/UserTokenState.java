@@ -15,7 +15,7 @@ public class UserTokenState {
 
     private String username;
 
-    private String roles;
+    private String role;
 
     public UserTokenState() {
         this.accessToken = null;

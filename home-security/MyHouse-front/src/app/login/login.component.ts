@@ -34,6 +34,7 @@ export class LoginComponent implements OnInit {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data.username);
         this.tokenStorage.saveUserRole(data.role);
+        console.log(data)
         this.isLoggedIn = true;
         this.isLoginFailed = false;
         //TODO: u zavisnosti od tipa korisnika, redirectuje na druga mesta

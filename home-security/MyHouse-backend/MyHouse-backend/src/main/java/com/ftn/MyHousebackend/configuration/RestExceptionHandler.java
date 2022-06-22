@@ -1,9 +1,6 @@
 package com.ftn.MyHousebackend.configuration;
 
-import com.ftn.MyHousebackend.exception.ErrorResponse;
-import com.ftn.MyHousebackend.exception.RoleNotFound;
-import com.ftn.MyHousebackend.exception.UserAlreadyExists;
-import com.ftn.MyHousebackend.exception.UserNotFoundException;
+import com.ftn.MyHousebackend.exception.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -32,7 +29,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    protected ResponseEntity<Object> handleUserNotFoundxception(UserNotFoundException e) {
+    protected ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND);
+        error.setMessage(e.getMessage());
+        return buildResponseEntity(error);
+    }
+
+    @ExceptionHandler(ObjectNotFound.class)
+    protected ResponseEntity<Object> handleObjectNotFoundException(ObjectNotFound e) {
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND);
         error.setMessage(e.getMessage());
         return buildResponseEntity(error);

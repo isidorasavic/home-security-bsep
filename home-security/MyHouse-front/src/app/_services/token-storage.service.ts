@@ -28,15 +28,11 @@ export class TokenStorageService {
     }
     return {};
   }
-  public saveUserRole(role: any): void {
+  public saveUserRole(role: string): void {
     window.sessionStorage.removeItem(ROLE_KEY);
-    window.sessionStorage.setItem(ROLE_KEY, JSON.stringify(role));
+    window.sessionStorage.setItem(ROLE_KEY, role);
   }
   public getUserRole(): any {
-    const role = window.sessionStorage.getItem(ROLE_KEY);
-    if (role) {
-      return JSON.parse(role);
-    }
-    return {};
+    return window.sessionStorage.getItem(ROLE_KEY);
   }
 }

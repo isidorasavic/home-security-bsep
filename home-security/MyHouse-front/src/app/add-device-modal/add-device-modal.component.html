@@ -1,0 +1,47 @@
+<h2 mat-dialog-title class="title">Add new device</h2>
+<mat-dialog-content [formGroup]="addDeviceForm">
+    <p>Object: {{data.selectedObject.name}}</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Device name</mat-label>
+        <input matInput  matInput
+        type="text"
+        formControlName="name"
+        id="name"
+        required>
+    </mat-form-field>
+    <mat-form-field class="input">
+        <mat-label>Device type</mat-label>
+        <mat-select formControlName="type" id="type">
+          <mat-option *ngFor="let type of deviceTypes" [value]="type.value">
+            {{ type.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+</mat-dialog-content> 
+
+<mat-dialog-actions class="bttns-div">
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            >
+            Submit
+        </button>
+    </div>
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="cancel-button"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</mat-dialog-actions>

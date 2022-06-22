@@ -11,6 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AddTenantModal } from './add-tenant-modal/add-tenant-modal.component';
+import { AddDeviceModal } from './add-device-modal/add-device-modal.component'
+
+import {MaterialModule} from './material-module'
 
 @NgModule({
   declarations: [
@@ -20,6 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     ProfileComponent,
     BoardUserComponent,
+    AddTenantModal,
+    AddDeviceModal
   ],
   imports: [
     BrowserModule,
@@ -27,7 +33,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

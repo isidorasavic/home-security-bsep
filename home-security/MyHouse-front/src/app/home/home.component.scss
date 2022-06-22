@@ -81,3 +81,24 @@ th, td {
     outline: green solid 1px;
     border-radius: 5px;
 }
+
+.select-device-div {
+    align-content: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+label {
+    font-size: larger;
+}
+
+mat-divider {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.add-device-div {
+    align-items: center;
+    text-align: center;
+    
+}

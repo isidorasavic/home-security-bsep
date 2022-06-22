@@ -5,6 +5,9 @@ import { Object } from '../__classes/object';
 import { Message } from '../__classes/message';
 import { Device } from '../__classes/device';
 import { User } from '../__classes/user';
+import {AddTenantModal} from '../add-tenant-modal/add-tenant-modal.component'
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { AddDeviceModal } from '../add-device-modal/add-device-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -12,16 +15,19 @@ import { User } from '../__classes/user';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  selectedObject: any;
+  selectedObject: Object;
   objectsList: Object[];
   messagesList: Message[];
   devicesList: Device[];
   selectedDevice: number;
-  constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService) { 
+  userRole: string;
+  constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog) { 
     this.objectsList = [];
+    this.selectedObject = new Object();
     this.messagesList = [];
     this.devicesList = [];
     this.selectedDevice = -1;
+    this.userRole = '';
   }
 
   ngOnInit(): void {
@@ -31,6 +37,7 @@ export class HomeComponent implements OnInit {
         this.objectsList = data;
         this.selectedObject = data[0];
         this.selectObject(data[0].id);
+        this.userRole = this.tokenStorage.getUserRole();
       },
       (err:any) => {
         console.log((err.error).message);
@@ -80,6 +87,14 @@ export class HomeComponent implements OnInit {
     
   }
 
+  isUserOwner(): boolean {
+    return this.userRole === 'OWNER';
+  }
+
+  isUserOwnerOfObject(): boolean {
+    return this.selectedObject.owner.username === this.tokenStorage.getUser();
+  }
+
   getDevices(): void {
     this.objectService.getObjectDevices(this.selectedObject.id).subscribe(
       (data:any) => {
@@ -90,5 +105,28 @@ export class HomeComponent implements OnInit {
         console.log((err.error).message);
       }
     );
+  }
+
+  openAddTennantDialog(): void {
+    const dialogRef = this.dialog.open(AddTenantModal, {
+      width: '400px',
+      height: '400px',
+      data: {selectedObject: this.selectedObject},
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  openAddDeviceDialog(): void {
+    const dialogRef = this.dialog.open(AddDeviceModal, {
+      width: '400px',
+      data: {selectedObject: this.selectedObject},
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
   }
 }

@@ -27,4 +27,12 @@ public class Device {
     @Enumerated(EnumType.STRING)
     private DeviceType type;
 
+    public Device() {
+    }
+
+    public Device(Object object, String name, DeviceType type) {
+        this.object = object;
+        this.name = name;
+        this.type = type;
+    }
 }

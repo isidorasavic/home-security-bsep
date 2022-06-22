@@ -11,7 +11,6 @@ public class DeviceDTO {
     private long id;
     private String name;
     private long objectId;
-
     private String type;
 
     public DeviceDTO() {
@@ -28,6 +27,6 @@ public class DeviceDTO {
         this.id = device.getId();
         this.name = device.getName();
         this.objectId = device.getObject().getId();
-        this.type = device.getType().name();
+        this.type = device.getType().getName();
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,5 +33,20 @@ public class Object {
     @ManyToMany(mappedBy = "tenantObjects", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<User> tenants;
+
+    public Object() {
+        this.tenants = new ArrayList<>();
+    }
+
+    public Object(String name, ObjectType objectType, User owner, List<User> tenants) {
+        this.name = name;
+        this.objectType = objectType;
+        this.owner = owner;
+        this.tenants = tenants;
+    }
+
+    public void addTennat(User tenant) {
+        this.tenants.add(tenant);
+    }
 
 }

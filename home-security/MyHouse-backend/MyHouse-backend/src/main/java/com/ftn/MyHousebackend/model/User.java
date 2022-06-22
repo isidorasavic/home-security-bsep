@@ -54,6 +54,7 @@ public class User implements UserDetails{
 
 
     public User() {
+        this.tenantObjects = new ArrayList<>();
     }
 
     public User(long id, String firstName, String lastName, String username, String password, String role, Boolean deleted) {
@@ -104,4 +105,7 @@ public class User implements UserDetails{
         return true;
     }
 
+    public void addObject(Object object) {
+        this.tenantObjects.add(object);
+    }
 }

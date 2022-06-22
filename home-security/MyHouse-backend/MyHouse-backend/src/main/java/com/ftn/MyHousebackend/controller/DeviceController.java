@@ -38,4 +38,12 @@ public class DeviceController {
     public List<DeviceDTO> getObjectDevices(@PathVariable("objectId") long objectId) {
         return deviceService.getAllDevicesForObject(objectId);
     }
+
+    @ResponseBody
+    @PostMapping(path = "/device")
+    @ResponseStatus(HttpStatus.OK)
+    //TODO
+    public DeviceDTO addDevice(@RequestBody DeviceDTO deviceDTO) {
+        return deviceService.addDevice(deviceDTO);
+    }
 }

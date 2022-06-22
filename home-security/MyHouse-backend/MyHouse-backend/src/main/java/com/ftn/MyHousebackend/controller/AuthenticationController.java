@@ -77,7 +77,7 @@ public class AuthenticationController {
 
 		UserTokenState userTokenState = new UserTokenState(jwt, expiresIn);
 		userTokenState.setUsername(user.getUsername());
-		userTokenState.setRoles(user.getRole());
+		userTokenState.setRole(user.getRole());
 
         // Kreiraj cookie
         // String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https

@@ -14,7 +14,7 @@ INSERT INTO USERS (first_name, last_name, username, password, role, deleted) VAL
 
 insert into objects (name, type, owner_id) values ('kuca1', 'House', 1);
 insert into objects (name, type, owner_id) values ('vikendica', 'VacationHome', 1);
-insert into objects (name, type, owner_id) values ('Stan', 'Apartment', 1);
+insert into objects (name, type, owner_id) values ('Stan', 'Apartment', 2);
 insert into objects (name, type, owner_id) values ('vila', 'House', 1);
 
 insert into devices (name, object_id, type) values ('svetlo 1', 1, 'LIGHT');

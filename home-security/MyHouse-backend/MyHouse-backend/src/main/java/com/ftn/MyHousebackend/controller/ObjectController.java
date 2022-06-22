@@ -34,7 +34,7 @@ public class ObjectController {
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
     //izmeniti da se username ni ne salje nego uzima na beku TODO
-    @GetMapping(path = "/owner/{username}/objects")
+    @GetMapping(path = "/user/{username}/objects")
     @ResponseStatus(HttpStatus.OK)
     public List<ObjectDTO> getOwnerObjects(@PathVariable("username") String username) {
         return objectService.getOwnerObjects(username);

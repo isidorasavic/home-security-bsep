@@ -29,7 +29,7 @@
         </tr>
         <tr *ngFor="let message of messagesList; let i = index" [class]="message.messageType">
           <td>{{i+1}}.</td>
-          <td>{{message.device.name}}</td>
+          <td><mat-icon>{{message.device.type}}_outline</mat-icon>{{message.device.name}}</td>
           <td>{{message.message}}</td>
           <td>{{message.date}}</td>
           <td>{{message.time}}</td>
@@ -39,12 +39,24 @@
   </div>
   <div class="object-content-div">
     <div class="select-device-div">
-      <p>Select device</p>
-      <select name="device" id="device" [(ngModel)]="selectedDevice" (change)="getDeviceMessages()">
-        <option [value]="-1">All devices</option>
-        <option *ngFor="let device of devicesList" [value]="device.id">{{device.name}}</option>
-      </select>
+      <label>Select device</label>
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="selectedDevice" (selectionChange)="getDeviceMessages()">
+          <mat-option [value]="-1">All devices</mat-option>
+          <mat-option *ngFor="let device of devicesList" [value]="device.id">
+            {{device.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="add-device-div">
+      <mat-divider></mat-divider>
+      <button mat-stroked-button *ngIf="isUserOwner()" color="primary" (click)="openAddDeviceDialog()">Add new device</button>
+    </div>
+    <div class="add-device-div">
+      <mat-divider></mat-divider>
+      <button mat-stroked-button *ngIf="isUserOwner() && isUserOwnerOfObject()" color="primary"(click)="openAddTennantDialog()">Add new tenant</button>
     </div>
   </div>
-
+  <!-- <app-add-tenant-modal></app-add-tenant-modal> -->
 </div>
