@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from './_services/token-storage.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,7 +13,7 @@ export class AppComponent implements OnInit {
   showModeratorBoard = false;
   username?: string;
   title: any;
-  constructor(private tokenStorageService: TokenStorageService) { }
+  constructor(private tokenStorageService: TokenStorageService, public router: Router) { }
   ngOnInit(): void {
     if (this.isLoggedIn()) {
       const user = this.tokenStorageService.getUser();
@@ -28,6 +30,7 @@ export class AppComponent implements OnInit {
 
   logout(): void {
     this.tokenStorageService.signOut();
-    window.location.reload();
+    // window.location.reload();
+    this.router.navigate(['/login']);
   }
 }
