@@ -1,5 +1,6 @@
 package com.ftn.MyHousebackend.model;
 
+import com.ftn.MyHousebackend.model.enums.DeviceType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,5 +22,9 @@ public class Device {
 
     @Column(name="name", nullable = false)
     private String name;
+
+    @Column(name="type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DeviceType type;
 
 }

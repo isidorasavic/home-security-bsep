@@ -17,8 +17,8 @@ insert into objects (name, type, owner_id) values ('vikendica', 'VacationHome', 
 insert into objects (name, type, owner_id) values ('Stan', 'Apartment', 1);
 insert into objects (name, type, owner_id) values ('vila', 'House', 1);
 
-insert into devices (name, object_id) values ('svetlo 1', 1);
-insert into devices (name, object_id) values ('ulazna vrata ', 1);
+insert into devices (name, object_id, type) values ('svetlo 1', 1, 'LIGHT');
+insert into devices (name, object_id, type) values ('ulazna vrata ', 1, 'DOOR');
 
 insert into object_messages (object_id, device_id, message_type, message, date, time) values (1, 1, 'MESSAGE', ':)', '2022-05-13', '12:12:00');
 insert into object_messages (object_id, device_id, message_type, message, date, time) values (1, 1, 'ALARM', ':(', '2022-05-13', '13:12:00');

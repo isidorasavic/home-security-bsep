@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   }
 
   getDeviceMessages(): void {
-    if(this.selectedDevice === -1){
+    if(this.selectedDevice == -1){
       console.log(this.selectedDevice);
       this.objectService.getObjectMessages(this.selectedObject.id).subscribe(
         (data:any) => {
