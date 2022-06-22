@@ -27,4 +27,12 @@ export class ObjectService {
       return this.http.get(environment.BASE_PATH+'object/'+objectId+'/devices', httpOptions);
     }
 
+    getPotentialTenants(objectId: number): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'object/tenantOptions?objectId='+objectId, httpOptions);
+    }
+
+    addTenant(objectId: number, username: string): Observable<any> {
+      return this.http.post(environment.BASE_PATH+'object/tenant?objectId='+objectId+'&tenant='+username, httpOptions);
+    }
+
 }

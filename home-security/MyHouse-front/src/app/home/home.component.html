@@ -10,6 +10,28 @@
         </button>
       </div>
     </div>
+    <mat-divider></mat-divider>
+    <div class="my-objects-title-div">
+      Owner
+    </div>
+    <div>
+      <div class="object-list-elem">
+        <button class="btn btn-block">
+          {{selectedObject.owner.username}}
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="my-objects-title-div">
+      Tenants
+    </div>
+    <div>
+      <div *ngFor="let user of selectedObject.tenants; let i = index" class="object-list-elem">
+        <button class="btn btn-block">
+          {{user.username}}
+        </button>
+      </div>
+    </div>
   </div>
   <div class="object-content-div">
     <div class='object-title-div'>
@@ -49,14 +71,13 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="add-device-div">
+    <div class="add-device-div" *ngIf="isUserOwner() && isUserOwnerOfObject()">
       <mat-divider></mat-divider>
-      <button mat-stroked-button *ngIf="isUserOwner()" color="primary" (click)="openAddDeviceDialog()">Add new device</button>
+      <button mat-stroked-button color="primary" (click)="openAddDeviceDialog()">Add new device</button>
     </div>
-    <div class="add-device-div">
+    <div class="add-device-div" *ngIf="isUserOwner() && isUserOwnerOfObject()">
       <mat-divider></mat-divider>
-      <button mat-stroked-button *ngIf="isUserOwner() && isUserOwnerOfObject()" color="primary"(click)="openAddTennantDialog()">Add new tenant</button>
+      <button mat-stroked-button color="primary"(click)="openAddTennantDialog()">Add new tenant</button>
     </div>
   </div>
-  <!-- <app-add-tenant-modal></app-add-tenant-modal> -->
 </div>

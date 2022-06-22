@@ -110,12 +110,12 @@ export class HomeComponent implements OnInit {
   openAddTennantDialog(): void {
     const dialogRef = this.dialog.open(AddTenantModal, {
       width: '400px',
-      height: '400px',
       data: {selectedObject: this.selectedObject},
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log('The dialog was closed!');
+      window.location.reload();
     });
   }
 
@@ -127,6 +127,7 @@ export class HomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
+      this.getDevices();
     });
   }
 }

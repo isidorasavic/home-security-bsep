@@ -41,6 +41,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         error.setMessage(e.getMessage());
         return buildResponseEntity(error);
     }
+
+    @ExceptionHandler(InvalidArgumentException.class)
+    protected ResponseEntity<Object> handleInvalidArgumentException(InvalidArgumentException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_ACCEPTABLE);
+        error.setMessage(e.getMessage());
+        return buildResponseEntity(error);
+    }
+
     private ResponseEntity<Object> buildResponseEntity(ErrorResponse error) {
         return new ResponseEntity<>(error, error.getStatus());
     }

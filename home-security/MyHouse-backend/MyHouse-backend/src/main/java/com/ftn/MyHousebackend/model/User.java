@@ -52,7 +52,7 @@ public class User implements UserDetails{
     @JoinTable(name = "tenant_objects",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "object_id"))
-    private List<Object> tenantObjects;
+    private List<Object> tenantObjects = new ArrayList<>();
 
 
     public User() {
@@ -67,6 +67,7 @@ public class User implements UserDetails{
         this.password = password;
         this.role = role;
         this.deleted = deleted;
+        this.tenantObjects = new ArrayList<>();
     }
 
     @Override

@@ -1,26 +1,32 @@
-<!-- <h2 mat-dialog-title class="title">Add new device</h2>
-<mat-dialog-content style="white-space: pre-line">
+<h2 mat-dialog-title class="title">Add tenant</h2>
+<mat-dialog-content [formGroup]="addTenantForm">
     <p>Object: {{data.selectedObject.name}}</p>
-    <mat-form-field appearance="fill">
-        <mat-label>Favorite Animal</mat-label>
-        <input matInput>
-    </mat-form-field>
+    <mat-form-field class="input">
+        <mat-label>Tenant</mat-label>
+        <mat-select formControlName="tenant" id="tenant">
+          <mat-option *ngFor="let user of potentialTenants" [value]="user.username">
+            {{ user.username }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 </mat-dialog-content> 
 
 <mat-dialog-actions class="bttns-div">
     <div class="bttn-div">
         <button
-        color="primary"
-        type="submit"
-        class="submit-button"
-        id="submit-button"
-        (click)="onCancel()"
-        >
-        Submit
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            >
+            Submit
         </button>
     </div>
     <div class="bttn-div">
         <button
+            mat-stroked-button
             color="primary"
             type="submit"
             class="submit-button"
@@ -30,4 +36,4 @@
             Cancel
         </button>
     </div>
-</mat-dialog-actions> -->
+</mat-dialog-actions>

@@ -3,6 +3,7 @@ package com.ftn.MyHousebackend.controller;
 import antlr.Token;
 import com.ftn.MyHousebackend.dto.ObjectDTO;
 import com.ftn.MyHousebackend.dto.ObjectMessageDTO;
+import com.ftn.MyHousebackend.dto.UserDTO;
 import com.ftn.MyHousebackend.model.ObjectMessage;
 import com.ftn.MyHousebackend.security.security.TokenUtils;
 import com.ftn.MyHousebackend.service.ObjectMessageService;
@@ -47,5 +48,16 @@ public class ObjectController {
         return objectMessageService.getAllMessagesForObject(objectId);
     }
 
+    @ResponseBody
+    @PostMapping(path = "/object/tenant")
+    public UserDTO addTenantToObject(@RequestParam("objectId") long objectId, @RequestParam("tenant") String tenant) {
+        return objectService.addTennatToObject(objectId, tenant);
+    }
 
+    @ResponseBody
+    @GetMapping(path = "/object/tenantOptions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> getPotentialTenants(@RequestParam("objectId") long objectId) {
+        return objectService.getPotentialTenants(objectId);
+    }
 }

@@ -32,7 +32,7 @@ public class Object {
 
     @ManyToMany(mappedBy = "tenantObjects", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<User> tenants;
+    private List<User> tenants = new ArrayList<>();
 
     public Object() {
         this.tenants = new ArrayList<>();
@@ -45,8 +45,8 @@ public class Object {
         this.tenants = tenants;
     }
 
-    public void addTennat(User tenant) {
-        this.tenants.add(tenant);
+    public void addTenant(User tenant) {
+        tenants.add(tenant);
     }
 
 }
