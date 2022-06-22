@@ -38,7 +38,7 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.username = user.getUsername();
         this.id = user.getId();
-        this.role = user.getRole();
+        this.role = user.getRole().name();
     }
 
     @Override

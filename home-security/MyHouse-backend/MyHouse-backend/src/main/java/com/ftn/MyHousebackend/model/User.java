@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.ftn.MyHousebackend.model.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -40,7 +41,8 @@ public class User implements UserDetails{
     protected String password;
 
     @Column(name="role", nullable = false)
-    protected String role; 
+    @Enumerated(EnumType.STRING)
+    protected UserRole role;
 
     @Column(name = "deleted", nullable = false)
     protected Boolean deleted;
@@ -57,7 +59,7 @@ public class User implements UserDetails{
         this.tenantObjects = new ArrayList<>();
     }
 
-    public User(long id, String firstName, String lastName, String username, String password, String role, Boolean deleted) {
+    public User(long id, String firstName, String lastName, String username, String password, UserRole role, Boolean deleted) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,13 +72,13 @@ public class User implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<Authority> authorities = new ArrayList<Authority>();
-        if (role.equalsIgnoreCase("ADMIN")) {
+        if (role == UserRole.ADMIN) {
             authorities.add(new Authority("ROLE_ADMIN"));
         }
-        if (role.equalsIgnoreCase("OWNER")) {
+        if (role == UserRole.OWNER) {
             authorities.add(new Authority("ROLE_OWNER"));
         }
-        if (role.equalsIgnoreCase("TENANT")) {
+        if (role == UserRole.TENANT) {
             authorities.add(new Authority("ROLE_TENANT"));
         }
         return authorities;

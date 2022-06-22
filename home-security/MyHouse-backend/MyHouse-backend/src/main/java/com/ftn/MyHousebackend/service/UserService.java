@@ -11,6 +11,7 @@ import com.ftn.MyHousebackend.exception.RoleNotFound;
 import com.ftn.MyHousebackend.exception.UserAlreadyExists;
 import com.ftn.MyHousebackend.exception.UserNotFoundException;
 import com.ftn.MyHousebackend.model.User;
+import com.ftn.MyHousebackend.model.enums.UserRole;
 import com.ftn.MyHousebackend.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class UserService implements UserDetailsService{
         }
         else{
             User user = userOptional.get();
-            user.setRole(newRole);
+            user.setRole(UserRole.valueOf(newRole));
             userRepository.saveAndFlush(user);
             return new UserDTO(user);
         }
@@ -97,16 +98,13 @@ public class UserService implements UserDetailsService{
         if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
             throw new UserAlreadyExists("Username "+userDTO.getUsername()+" is taken!");
         }
-        if(!userDTO.getRole().toUpperCase().equals("OWNER") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("TENANT") && !userDTO.getRole().toUpperCase().equalsIgnoreCase("ADMIN")){
-            throw new RoleNotFound("Role not found!");
-        }
         User newUser = new User();
         newUser.setUsername(userDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
         newUser.setDeleted(false);
-        newUser.setRole(userDTO.getRole().toUpperCase());
+        newUser.setRole(UserRole.valueOf(userDTO.getRole()));
 
         userRepository.saveAndFlush(newUser);
         return userDTO;
