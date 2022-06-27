@@ -1,2 +1,54 @@
-<p>board-user works!</p>
-<mat-icon >home</mat-icon>
+<div class="users-component">
+    <div class="all-users-div">
+      <div class="my-objects-title-div">
+        All users
+      </div>
+      <div *ngFor="let user of usersList; let i = index" class="user-list-elem">
+        <button class="btn btn-block" (click)="selectUser(i)">
+            {{user.firstName}} {{user.lastName}}
+        </button>
+      </div>
+    </div>
+    <div class="all-users-div">
+      <div class='user-title-div'>
+        {{selectedUser.firstName}} {{selectedUser.lastName}} ({{selectedUser.username}}) objects
+      </div>
+      <div class="user-devices-div">
+        <table class="user-devices-table">
+          <tr>
+            <th></th>
+            <th>Object name</th>
+            <th>Type</th>
+            <th>Owner</th>
+          </tr>
+          <tr *ngFor="let object of userObjects; let i = index" >
+            <td>{{i+1}}.</td>
+            <td>{{object.name}}</td>
+            <td>{{object.type}}</td>
+            <td>{{object.owner.username}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="all-users-div">
+      <div class="select-device-div">
+        :)
+      </div>
+      <div class="action-div" >
+        <mat-divider></mat-divider>
+        <button mat-stroked-button color="primary">Add new user</button>
+      </div>
+      <div class="action-div">
+        <mat-divider></mat-divider>
+        <button mat-stroked-button color="primary" (click)="blockUser()">Block this user</button>
+      </div>
+      <div class="action-div" >
+        <mat-divider></mat-divider>
+        <button mat-stroked-button color="primary" (click)="deleteUser()">Delete this user</button>
+      </div>
+      <div class="action-div" >
+        <mat-divider></mat-divider>
+        <button mat-stroked-button color="primary">Change user role</button>
+      </div>
+    </div>
+  </div>

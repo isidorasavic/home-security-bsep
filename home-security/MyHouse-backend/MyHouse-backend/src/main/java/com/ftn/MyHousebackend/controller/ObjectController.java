@@ -60,4 +60,11 @@ public class ObjectController {
     public List<UserDTO> getPotentialTenants(@RequestParam("objectId") long objectId) {
         return objectService.getPotentialTenants(objectId);
     }
+
+//    @ResponseBody
+//    @GetMapping(path = "/all/{username}/objects")
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<UserDTO> getPotentialTenants(@RequestParam("objectId") long objectId) {
+//        return objectService.getPotentialTenants(objectId);
+//    }
 }

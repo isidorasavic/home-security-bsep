@@ -8,6 +8,8 @@ import { User } from '../__classes/user';
 import {AddTenantModal} from '../add-tenant-modal/add-tenant-modal.component'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { AddDeviceModal } from '../add-device-modal/add-device-modal.component';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -21,7 +23,7 @@ export class HomeComponent implements OnInit {
   devicesList: Device[];
   selectedDevice: number;
   userRole: string;
-  constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog) { 
+  constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
     this.objectsList = [];
     this.selectedObject = new Object();
     this.messagesList = [];
@@ -31,6 +33,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.tokenStorage.getUserRole() === "ADMIN"){
+      this.router.navigate(['/user']);
+    }
     this.objectService.getOwnerObjects(this.tokenStorage.getUser()).subscribe(
       (data:any) => {
         console.log('data:',data[0])

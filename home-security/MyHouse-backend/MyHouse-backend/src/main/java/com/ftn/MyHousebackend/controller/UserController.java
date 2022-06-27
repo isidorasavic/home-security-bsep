@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 
 
 @RestController
-@RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(path = "/search/{searchWord}")
+    @GetMapping(path = "/user/search/{searchWord}")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> searchUsers(@PathVariable("searchWord") String searchWord) {
         return userService.searchUsers(searchWord);
@@ -42,7 +42,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(path = "/list")
+    @GetMapping(path = "/users/list")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findAllUsers() {
         return userService.findAll();
@@ -50,7 +50,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(path = "/delete/{username}")
+    @DeleteMapping(path = "/user/delete/{username}")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO deleteUser(@PathVariable("username") String username) {
         return userService.deleteUser(username);
@@ -58,7 +58,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(path = "/changeRole")
+    @PutMapping(path = "/user/changeRole")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO changeRole(@RequestParam("username") String username, @RequestParam("newRole") String newRole) {
         return userService.changeRole(username, newRole);

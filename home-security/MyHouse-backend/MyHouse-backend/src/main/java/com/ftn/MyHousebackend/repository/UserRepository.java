@@ -20,9 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRoleNotAndDeletedIsFalse(@Param("role") String role);
 
-    List<User> findByDeletedIsFalseAndRoleIsNot(@Param("role") String role);
+    List<User> findByDeletedIsFalseAndRoleIsNot(@Param("role") UserRole role);
 
-    List<User> findByRoleNotAndDeletedIsFalseAndUsernameContaining(@Param("role") String role, @Param("search") String search);
+    List<User> findByRoleNotAndDeletedIsFalseAndUsernameContaining(@Param("role") UserRole role, @Param("search") String search);
 
     List<User> findByRoleNotAndDeletedIsFalse(@Param("role") UserRole role);
   }

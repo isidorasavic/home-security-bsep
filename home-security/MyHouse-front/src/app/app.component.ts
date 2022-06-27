@@ -24,6 +24,10 @@ export class AppComponent implements OnInit {
     }
   }
 
+  isAdmin() : boolean {
+    return this.tokenStorageService.getUserRole() == "ADMIN";
+  }
+
   isLoggedIn() : boolean {
     return !!this.tokenStorageService.getToken();
   }

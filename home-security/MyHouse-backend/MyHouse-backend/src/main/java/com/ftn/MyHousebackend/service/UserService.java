@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService{
 
     public List<UserDTO> findAll() {
         List<UserDTO> users = new ArrayList<UserDTO>();
-        userRepository.findByDeletedIsFalseAndRoleIsNot("ADMIN").iterator().forEachRemaining(user -> users.add(new UserDTO(user)));
+        userRepository.findByDeletedIsFalseAndRoleIsNot(UserRole.ADMIN).iterator().forEachRemaining(user -> users.add(new UserDTO(user)));
         return users;
     }
 
@@ -62,7 +62,7 @@ public class UserService implements UserDetailsService{
 
     public List<UserDTO> searchUsers(String searchWord){
         List<UserDTO> users = new ArrayList<UserDTO>();
-        userRepository.findByRoleNotAndDeletedIsFalseAndUsernameContaining("ADMIN", searchWord).iterator().forEachRemaining(user -> users.add(new UserDTO(user)));
+        userRepository.findByRoleNotAndDeletedIsFalseAndUsernameContaining(UserRole.ADMIN, searchWord).iterator().forEachRemaining(user -> users.add(new UserDTO(user)));
         return users;
     }
 
