@@ -12,7 +12,7 @@ import java.util.List;
 public class ReportDTO {
 
     private ObjectDTO object;
-    private String dateForm;
+    private String dateFrom;
     private String dateTo;
     private List<ObjectMessageDTO> messages;
 

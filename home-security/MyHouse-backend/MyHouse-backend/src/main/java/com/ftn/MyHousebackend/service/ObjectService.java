@@ -120,7 +120,7 @@ public class ObjectService {
 
         ReportDTO report = new ReportDTO();
         report.setObject(new ObjectDTO(object));
-        report.setDateForm(startDate.toString());
+        report.setDateFrom(startDate.toString());
         report.setDateTo(endDate.toString());
         List<ObjectMessageDTO> messageDTOs = new ArrayList<>();
         messages.forEach(message -> {
