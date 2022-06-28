@@ -1,40 +1,41 @@
 package com.ftn.adminbackend.service;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
+import com.ftn.adminbackend.dto.UserDTO;
+import com.ftn.adminbackend.exception.*;
+import com.ftn.adminbackend.model.User;
+import com.ftn.adminbackend.model.enums.UserRole;
+import com.ftn.adminbackend.repository.ObjectRepository;
+import com.ftn.adminbackend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.ftn.adminbackend.dto.UserDTO;
-import com.ftn.adminbackend.exception.RoleNotFound;
-import com.ftn.adminbackend.exception.UserExistsException;
-import com.ftn.adminbackend.model.User;
-import com.ftn.adminbackend.repository.UserRepository;
-
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class UserService implements UserDetailsService{
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final ObjectRepository objectRepository;
+
+
+    private final UserRepository userRepository;
+
+    public UserService(PasswordEncoder passwordEncoder, ObjectRepository objectRepository, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.objectRepository = objectRepository;
+        this.userRepository = userRepository;
+    }
 
     public User findById(Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -46,61 +47,96 @@ public class UserService implements UserDetailsService{
         return user;
     }
 
-    public List<User> findAll() {
-        List<User> result = userRepository.findAll();
-        return result;
+    public List<UserDTO> findAll() {
+        List<UserDTO> users = new ArrayList<UserDTO>();
+        userRepository.findByDeletedIsFalseAndRoleIsNot(UserRole.ADMIN).iterator().forEachRemaining(user -> users.add(new UserDTO(user)));
+        return users;
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-
-    public static String BASE_URL = "http://localhost:8081/api";
-
-	public static String URL_ENCODING = "UTF-8";
-
-    public UserDTO addUser(UserDTO userDTO) throws Exception{
-        
-        if(userRepository.findAdminByUsernameAndDeletedIsFalse(userDTO.getUsername()).isPresent()){
-            throw new UserExistsException("Username is taken!");
-        }
-
-        if(!userDTO.getRole().equals("OWNER") && !userDTO.getRole().equalsIgnoreCase("TENANT")&& !userDTO.getRole().equalsIgnoreCase("ADMIN")){
-            throw new RoleNotFound("Role not found!");
-        }
-
-        User newUser = new User(userDTO);
-        newUser.setId(userRepository.findAll().size()+1);
-        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userRepository.save(newUser);
-        System.out.println(newUser.toString());
-        //koji god korisnik da se doda, on ce se slati i na MyHouse bek da bi tamo mogao da se uloguuje
-        //ako se doda novi korisnik u MyHouse, on ce biti poslat ovde da bi admin mogao da ga vidi (ovo vrv ne treba ali nema veze)
-        String url = BASE_URL + "/user/addUser";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        URI uri = new URI(url);
-
-        HttpEntity<UserDTO> httpEntity = new HttpEntity<>(userDTO, headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        UserDTO userDTO2 = restTemplate.postForObject(uri, httpEntity, UserDTO.class);
-        LOG.info("Finished comunicating with MyHouse. Response: " + userDTO2);
-        return userDTO;
-
-    }
-
-    public static String getStringFromInputStream(InputStream in) throws Exception {
-		return new String(IOUtils.toByteArray(in), URL_ENCODING);
-	}
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findAdminByUsernameAndDeletedIsFalseAndRole(username, "ADMIN");
+        Optional<User> user = userRepository.findByUsernameAndDeletedIsFalseAndBlockedIsFalse(username);
         if(user.isPresent()){
             return user.get();
         }
-        throw new UsernameNotFoundException("No such user exists");
+        throw new UserNotFoundException("User not found!");
     }
 
+    public List<UserDTO> searchUsers(String searchWord){
+        List<UserDTO> users = new ArrayList<UserDTO>();
+        userRepository.findByRoleNotAndDeletedIsFalseAndUsernameContaining(UserRole.ADMIN, searchWord).iterator().forEachRemaining(user -> users.add(new UserDTO(user)));
+        return users;
+    }
+
+    public UserDTO deleteUser(long id){
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()){
+            throw new UsernameNotFoundException("User not found!");
+        }
+        else{
+            User user = userOptional.get();
+            user.setDeleted(true);
+            userRepository.saveAndFlush(user);
+            return new UserDTO(userOptional.get());
+        }
+    }
+
+    public UserDTO changeRole(long id,String newRole){
+        UserRole role;
+        try{
+            role = UserRole.valueOf(newRole);
+        }
+        catch (Exception e){
+            throw new RoleNotFound("Role not found!");
+        }
+
+        Optional<User> userOptional = userRepository.findByIdAndDeletedIsFalse(id);
+        if (userOptional.isEmpty()){
+            throw new UsernameNotFoundException("User not found!");
+        }
+        User user = userOptional.get();
+
+        if(user.getRole() == UserRole.ADMIN) throw new InvalidArgumentException("Admin can't change role!");
+
+        if (objectRepository.findAllByOwnerId(id).size()!= 0 && user.getRole() == UserRole.OWNER && role==UserRole.TENANT) {
+            throw new UserContainsObjectsException("User owns objects and can't be turned to tennant!");
+        }
+
+        user.setRole(role);
+        userRepository.saveAndFlush(user);
+        return new UserDTO(user);
+    }
+
+    public UserDTO addUser(UserDTO userDTO){
+        LOG.info("Recived request to add user: "+userDTO.toString());
+        if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
+            throw new UserAlreadyExists("Username "+userDTO.getUsername()+" is taken!");
+        }
+        User newUser = new User();
+        newUser.setUsername(userDTO.getUsername());
+        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        newUser.setFirstName(userDTO.getFirstName());
+        newUser.setLastName(userDTO.getLastName());
+        newUser.setDeleted(false);
+        newUser.setRole(UserRole.valueOf(userDTO.getRole()));
+        newUser.setBlocked(false);
+        userRepository.saveAndFlush(newUser);
+        return userDTO;
+    }
+
+    public UserDTO blockUnblockUser(long id) {
+        Optional<User> optionalUser = userRepository.findByIdAndDeletedIsFalse(id);
+            if (optionalUser.isEmpty()) throw new UserNotFoundException("User not found!");
+        User user = optionalUser.get();
+        user.setBlocked(!user.getBlocked());
+        userRepository.saveAndFlush(user);
+        return new UserDTO(user);
+    }
+
+    public User findUserById(long id) {
+        Optional<User> optUser = userRepository.findById(id);
+        if(optUser.isPresent())return optUser.get();
+        throw new UserNotFoundException("User not found!");
+    }
 
 }

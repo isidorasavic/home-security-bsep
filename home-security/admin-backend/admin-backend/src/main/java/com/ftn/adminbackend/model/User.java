@@ -1,149 +1,87 @@
 package com.ftn.adminbackend.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.persistence.Entity;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ftn.adminbackend.dto.UserDTO;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.ftn.adminbackend.model.enums.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
 @Entity
-@Document("system_user")
+@Table(name = "users")
 public class User implements UserDetails{
-    
+
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
-    protected String username;
-    protected String password;
+
+    @Column(name = "first_name")
     protected String firstName;
+
+    @Column(name = "last_name")
     protected String lastName;
-    protected String role;
-    private boolean deleted;
 
-    protected User() {
+    @Column(name = "username", nullable = false)
+    protected String username;
+
+    @Column(name = "password", nullable = false, length = 60)
+    protected String password;
+
+    @Column(name="role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    protected UserRole role;
+
+    @Column(name = "deleted", nullable = false)
+    protected Boolean deleted;
+
+    @Column(name = "blocked", nullable = false)
+    protected Boolean blocked;
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(name = "tenant_objects",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "object_id"))
+    private List<Object> tenantObjects = new ArrayList<>();
+
+
+    public User() {
+        this.tenantObjects = new ArrayList<>();
     }
-    
-    public User(long id, String username, String password, String role, boolean deleted) {
-    	this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.deleted = deleted;
-    }
 
-    public User(String username, String password, String role, boolean deleted) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.deleted = deleted;
-    }
-
-    public User(UserDTO userDTO){
-        this.username = userDTO.getUsername();
-        this.password = userDTO.getPassword();
-        this.role = userDTO.getRole();
-        this.deleted = false;
-    }
-
-
-    public User(long id, String username, String password, String firstName, String lastName, String role, boolean deleted) {
+    public User(long id, String firstName, String lastName, String username, String password, UserRole role, Boolean deleted, Boolean blocked) {
         this.id = id;
-        this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
+        this.password = password;
         this.role = role;
         this.deleted = deleted;
+        this.tenantObjects = new ArrayList<>();
+        this.blocked = blocked;
     }
-
 
     @Override
-    public String toString() {
-        return String.format(
-                "User[username='%s' password='%s', role='%s']",
-                username, password, role);
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getRole() {
-        return this.role;
-    }
-    
-    public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public boolean getDeleted() {
-        return this.deleted;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-
-
-	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<Authority> authorities = new ArrayList<Authority>();
-        
-        if (role.equalsIgnoreCase("ADMIN")) {
+        ArrayList<Authority> authorities = new ArrayList<>();
+        if (role == UserRole.ADMIN) {
             authorities.add(new Authority("ROLE_ADMIN"));
         }
-        if (role.equalsIgnoreCase("OWNER")) {
+        if (role == UserRole.OWNER) {
             authorities.add(new Authority("ROLE_OWNER"));
         }
-        if (role.equalsIgnoreCase("TENANT")) {
+        if (role == UserRole.TENANT) {
             authorities.add(new Authority("ROLE_TENANT"));
         }
         return authorities;
@@ -172,6 +110,7 @@ public class User implements UserDetails{
         return true;
     }
 
-
-
+    public void addObject(Object object) {
+        this.tenantObjects.add(object);
+    }
 }

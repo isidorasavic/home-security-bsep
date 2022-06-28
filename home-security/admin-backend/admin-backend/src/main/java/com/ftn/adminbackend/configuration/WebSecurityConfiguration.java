@@ -4,8 +4,8 @@ package com.ftn.adminbackend.configuration;
 import com.ftn.adminbackend.security.TokenUtils;
 import com.ftn.adminbackend.security.authentication.RestAuthenticationEntryPoint;
 import com.ftn.adminbackend.security.authentication.TokenAuthenticationFilter;
-import com.ftn.adminbackend.service.CustomUserDetailsService;
 
+import com.ftn.adminbackend.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,18 +25,22 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Bean
+	public WebSecurityConfiguration(CustomUserDetailsService jwtUserDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, TokenUtils tokenUtils) {
+		this.jwtUserDetailsService = jwtUserDetailsService;
+		this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+		this.tokenUtils = tokenUtils;
+	}
+
+	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(10);
 	}
 
 	// Servis koji se koristi za citanje podataka o korisnicima aplikacije
-	@Autowired
-	public CustomUserDetailsService jwtUserDetailsService;
+	public final CustomUserDetailsService jwtUserDetailsService;
 
 	// Handler za vracanje 401 kada klijent sa neodogovarajucim korisnickim imenom i lozinkom pokusa da pristupi resursu
-	@Autowired
-	private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
 	// Registrujemo authentication manager koji ce da uradi autentifikaciju korisnika za nas
 	@Bean
@@ -51,8 +55,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	// Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
-	@Autowired
-	private TokenUtils tokenUtils;
+	private final TokenUtils tokenUtils;
     
 
     @Override
@@ -89,5 +92,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
 				"/**/*.css", "/**/*.js");
 		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
+		web.ignoring().antMatchers(HttpMethod.POST, "/api/**");
+		web.ignoring().antMatchers(HttpMethod.GET, "/api/**");
 	}
 }
