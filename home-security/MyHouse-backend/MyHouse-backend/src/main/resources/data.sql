@@ -11,6 +11,8 @@ INSERT INTO USERS (first_name, last_name, username, password, role, deleted, blo
  ('Isidora', 'Savic', 'isidora4', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'OWNER', false, false);
  INSERT INTO USERS (first_name, last_name, username, password, role, deleted, blocked) VALUES
  ('Isidora5', 'Savic5', 'isidora5', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'TENANT', true, false);
+INSERT INTO USERS (first_name, last_name, username, password, role, deleted, blocked) VALUES
+('Isidora6', 'Savic6', 'isidora6', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'TENANT', true, false);
 
 insert into objects (name, type, owner_id) values ('kuca1', 'House', 1);
 insert into objects (name, type, owner_id) values ('vikendica', 'VacationHome', 1);
