@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService{
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> maybeUser = userRepository.findByUsername(username);
+        Optional<User> maybeUser = userRepository.findByUsernameAndDeletedIsFalseAndBlockedIsFalse(username);
 		if (maybeUser.isPresent()) {
 			return maybeUser.get();
 		} else {

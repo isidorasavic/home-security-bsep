@@ -16,7 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
   
     Optional<User> findByUsername(String username);
 
-    Optional<User> findByUsernameAndDeletedIsFalse(String username);
+    Optional<User> findByUsernameAndDeletedIsFalseAndBlockedIsFalse(String username);
+
+    Optional<User> findByIdAndDeletedIsFalseAndBlockedIsFalse(long id);
+
+    Optional<User> findByIdAndDeletedIsFalse(long id);
+
 
     List<User> findByRoleNotAndDeletedIsFalse(@Param("role") String role);
 

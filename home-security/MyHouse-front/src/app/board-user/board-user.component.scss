@@ -54,9 +54,15 @@
 
 .user-devices-table {
     width: 100%;
-    margin-top: 50px;
+    margin-top: 20px;
     border-collapse: separate;
     border-spacing: 0 10px;
+}
+
+.user-role-div {
+    text-align: center;
+    width: 100%;
+    margin-top: 40px;
 }
 
 th, td {

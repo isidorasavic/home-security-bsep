@@ -47,6 +47,9 @@ public class User implements UserDetails{
     @Column(name = "deleted", nullable = false)
     protected Boolean deleted;
 
+    @Column(name = "blocked", nullable = false)
+    protected Boolean blocked;
+
     @ManyToMany
     @JsonIgnore
     @JoinTable(name = "tenant_objects",
@@ -59,7 +62,7 @@ public class User implements UserDetails{
         this.tenantObjects = new ArrayList<>();
     }
 
-    public User(long id, String firstName, String lastName, String username, String password, UserRole role, Boolean deleted) {
+    public User(long id, String firstName, String lastName, String username, String password, UserRole role, Boolean deleted, Boolean blocked) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -68,6 +71,7 @@ public class User implements UserDetails{
         this.role = role;
         this.deleted = deleted;
         this.tenantObjects = new ArrayList<>();
+        this.blocked = blocked;
     }
 
     @Override

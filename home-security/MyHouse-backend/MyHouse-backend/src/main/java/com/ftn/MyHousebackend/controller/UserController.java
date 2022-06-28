@@ -71,4 +71,12 @@ public class UserController {
     public UserDTO addUser(@RequestBody UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
+
+    @ResponseBody
+    // preauthorize admin
+    @PutMapping(path = "/blockUnblock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO blockUnblockUser(@PathVariable("id") long id) {
+        return userService.blockUnblockUser(id);
+    }
 }

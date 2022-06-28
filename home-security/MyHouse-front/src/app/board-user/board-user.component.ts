@@ -97,7 +97,7 @@ export class BoardUserComponent implements OnInit {
   blockUser() : void {
     console.log("block user: "+this.selectedUser.username);
     console.log("inform that user is blocked");
-    this.modalMessage = "Are you sure you want to block user: "+this.selectedUser.username+"?"
+    this.modalMessage = "Are you sure you want to block/unblock user: "+this.selectedUser.username+"?"
     const dialogRef = this.dialog.open(ConfirmModal, {
       width: '400px',
       data: {modalMessage: this.modalMessage},
@@ -105,6 +105,17 @@ export class BoardUserComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('Confirmed: ', result);
+      if (result) {
+        this.userService.blockUnblockUser(this.selectedUser.id).subscribe(
+          (response:any) => {
+            console.log(response)
+            window.location.reload();
+          },
+          (err:any) => {
+            console.log((err.error).message);
+          }
+        );
+      }
     });
   }
 

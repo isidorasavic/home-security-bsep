@@ -23,6 +23,10 @@ export class UserService {
   addUser(newuser: any): Observable<any> {
     return this.http.post(environment.BASE_PATH + 'addUser', newuser, httpOptions);
   }
+
+  blockUnblockUser(id: number): Observable<any> {
+    return this.http.put(environment.BASE_PATH + 'blockUnblock/'+id, httpOptions);
+  }
   // getUserBoard(): Observable<any> {
   //   return this.http.get(environment.BASE_PATH + 'user', { responseType: 'text' });
   // }

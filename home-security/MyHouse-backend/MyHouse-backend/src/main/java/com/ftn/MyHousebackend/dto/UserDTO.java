@@ -3,9 +3,11 @@ package com.ftn.MyHousebackend.dto;
 import com.ftn.MyHousebackend.model.User;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class UserDTO {
     
     private long id;
@@ -15,6 +17,7 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private boolean deleted;
+    private boolean blocked;
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
@@ -39,19 +42,8 @@ public class UserDTO {
         this.username = user.getUsername();
         this.id = user.getId();
         this.role = user.getRole().name();
+        this.blocked = user.getBlocked();
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-            " id='" + getId() + "'" +
-            ", username='" + getUsername() + "'" +
-            ", password='" + getPassword() + "'" +
-            ", firstName='" + getFirstName() + "'" +
-            ", lastName='" + getLastName() + "'" +
-            ", deleted='" + isDeleted() + "'" +
-            ", role='" + getRole() + "'" +
-            "}";
-    }
 
 }

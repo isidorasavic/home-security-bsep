@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsernameAndDeletedIsFalse(username);
+        Optional<User> user = userRepository.findByUsernameAndDeletedIsFalseAndBlockedIsFalse(username);
         if(user.isPresent()){
             return user.get();
         }
@@ -107,10 +107,18 @@ public class UserService implements UserDetailsService{
         newUser.setLastName(userDTO.getLastName());
         newUser.setDeleted(false);
         newUser.setRole(UserRole.valueOf(userDTO.getRole()));
-
+        newUser.setBlocked(false);
         userRepository.saveAndFlush(newUser);
         return userDTO;
+    }
 
+    public UserDTO blockUnblockUser(long id) {
+        Optional<User> optionalUser = userRepository.findByIdAndDeletedIsFalse(id);
+            if (optionalUser.isEmpty()) throw new UserNotFoundException("User not found!");
+        User user = optionalUser.get();
+        user.setBlocked(!user.getBlocked());
+        userRepository.saveAndFlush(user);
+        return new UserDTO(user);
     }
 
     public User findUserById(long id) {

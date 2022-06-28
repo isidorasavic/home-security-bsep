@@ -6,4 +6,5 @@ export class User{
     firstName = "";
     lastName = "";
     deleted=false;
+    blocked=false;
 }

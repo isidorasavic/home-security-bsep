@@ -13,6 +13,9 @@
       <div class='user-title-div'>
         {{selectedUser.firstName}} {{selectedUser.lastName}} ({{selectedUser.username}}) objects
       </div>
+      <div class="user-role-div">
+        User role: {{selectedUser.role}}
+      </div>
       <div class="user-devices-div">
         <table class="user-devices-table">
           <tr>
@@ -41,7 +44,7 @@
       </div>
       <div class="action-div">
         <mat-divider></mat-divider>
-        <button mat-stroked-button color="primary" (click)="blockUser()">Block this user</button>
+        <button mat-stroked-button color="primary" (click)="blockUser()">{{selectedUser.blocked ? 'Unblock this user' : 'Block this user'}}</button>
       </div>
       <div class="action-div" >
         <mat-divider></mat-divider>
