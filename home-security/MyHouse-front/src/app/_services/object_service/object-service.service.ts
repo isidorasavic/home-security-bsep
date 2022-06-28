@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { NumberValueAccessor } from '@angular/forms';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -33,6 +34,10 @@ export class ObjectService {
 
     addTenant(objectId: number, username: string): Observable<any> {
       return this.http.post(environment.BASE_PATH+'object/tenant?objectId='+objectId+'&tenant='+username, httpOptions);
+    }
+
+    getReport(id: number, dateFrom: string, dateTo: string): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'object/'+id+'/report/from/'+dateFrom+'/to/'+dateTo, httpOptions);
     }
 
 }

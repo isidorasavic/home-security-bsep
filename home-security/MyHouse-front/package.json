@@ -23,6 +23,7 @@
     "@auth0/angular-jwt": "^5.0.2",
     "angular": "^1.8.3",
     "angular-material": "http://github.com/angular/bower-material/tarball/master",
+    "moment": "^2.29.3",
     "ng": "^0.0.0",
     "ngx-bootstrap": "^8.0.0",
     "ngx-toastr": "^14.3.0",

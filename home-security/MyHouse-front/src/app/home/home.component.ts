@@ -10,6 +10,9 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { AddDeviceModal } from '../add-device-modal/add-device-modal.component';
 import { Router } from '@angular/router';
 import { AddUserModal } from '../add-user-modal/add-user-modal.component';
+import { GenerateReportModal } from '../generate-report-modal/generate-report-modal.component';
+import { Report } from '../__classes/report';
+import { ReportModal } from '../report-modal/report-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +26,7 @@ export class HomeComponent implements OnInit {
   devicesList: Device[];
   selectedDevice: number;
   userRole: string;
+  report: Report;
   constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
     this.objectsList = [];
     this.selectedObject = new Object();
@@ -30,6 +34,7 @@ export class HomeComponent implements OnInit {
     this.devicesList = [];
     this.selectedDevice = -1;
     this.userRole = '';
+    this.report = new Report();
   }
 
   ngOnInit(): void {
@@ -133,6 +138,29 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
       this.getDevices();
+    });
+  }
+
+  generateReport(): void {
+    const dialogRef = this.dialog.open(GenerateReportModal, {
+      width: '400px',
+      data: {selectedObject: this.selectedObject},
+    });
+
+    dialogRef.afterClosed().subscribe((response) => {
+      console.log('Report: ', response);
+      if (response !== null){
+        this.report = response;
+        const dialogRef = this.dialog.open(ReportModal, {
+          width: '600px',
+          data: {report: this.report},
+        });
+    
+        dialogRef.afterClosed().subscribe(() => {
+          console.log('Report was closed');
+          this.report = new Report();
+        });
+      }
     });
   }
 }

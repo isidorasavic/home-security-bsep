@@ -3,6 +3,7 @@ package com.ftn.MyHousebackend.controller;
 import antlr.Token;
 import com.ftn.MyHousebackend.dto.ObjectDTO;
 import com.ftn.MyHousebackend.dto.ObjectMessageDTO;
+import com.ftn.MyHousebackend.dto.ReportDTO;
 import com.ftn.MyHousebackend.dto.UserDTO;
 import com.ftn.MyHousebackend.model.ObjectMessage;
 import com.ftn.MyHousebackend.security.security.TokenUtils;
@@ -59,6 +60,13 @@ public class ObjectController {
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> getPotentialTenants(@RequestParam("objectId") long objectId) {
         return objectService.getPotentialTenants(objectId);
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/object/{id}/report/from/{dateFrom}/to/{dateTo}")
+    @ResponseStatus(HttpStatus.OK)
+    public ReportDTO getReport(@PathVariable("id") long id, @PathVariable("dateFrom") String dateFrom, @PathVariable("dateTo") String dateTo) {
+        return objectService.getReport(id, dateFrom, dateTo);
     }
 
 //    @ResponseBody

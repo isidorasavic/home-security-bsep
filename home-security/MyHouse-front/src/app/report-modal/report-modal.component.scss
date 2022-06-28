@@ -1,0 +1,40 @@
+.bttns-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.bttn-div{
+    width: 100%;
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
+.messages-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+.report-container {
+    text-align: center;
+}
+
+.ALARM {
+    background-color: pink;
+    outline: red solid 1px;
+    border-radius: 5px;
+}
+
+.WARNING {
+    background-color: lightgoldenrodyellow;
+    outline: yellow solid 1px;
+    border-radius: 5px;
+}
+
+.MESSAGE {
+    background-color: lightgreen;
+    outline: green solid 1px;
+    border-radius: 5px;
+}
+
