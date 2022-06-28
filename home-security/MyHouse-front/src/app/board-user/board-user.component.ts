@@ -10,6 +10,7 @@ import { AddDeviceModal } from '../add-device-modal/add-device-modal.component';
 import { Router } from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
+import { AddUserModal } from '../add-user-modal/add-user-modal.component';
 
 @Component({
   selector: 'app-board-user',
@@ -58,13 +59,23 @@ export class BoardUserComponent implements OnInit {
     )
   }
 
+  addUser(): void {
+    console.log("add user clicked")
+    const dialogRef = this.dialog.open(AddUserModal, {
+      width: '400px',
+      data: {modalMessage: this.modalMessage},
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      window.location.reload();
+    });
+  }
+
   deleteUser(): void {
     console.log("prompt admin to delete user")
     console.log("delete user: "+this.selectedUser.username);
-    this.modalMessage = "Are you sure you want to delete user: "+this.selectedUser.username+"?"
     const dialogRef = this.dialog.open(ConfirmModal, {
       width: '400px',
-      data: {modalMessage: this.modalMessage},
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {

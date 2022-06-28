@@ -9,7 +9,7 @@ import {AddTenantModal} from '../add-tenant-modal/add-tenant-modal.component'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { AddDeviceModal } from '../add-device-modal/add-device-modal.component';
 import { Router } from '@angular/router';
-
+import { AddUserModal } from '../add-user-modal/add-user-modal.component';
 
 @Component({
   selector: 'app-home',

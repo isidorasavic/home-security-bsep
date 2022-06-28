@@ -1,0 +1,73 @@
+<h2 mat-dialog-title class="title">Add new user</h2>
+<mat-dialog-content [formGroup]="addUserForm">
+    <mat-form-field appearance="fill">
+        <mat-label>username</mat-label>
+        <input matInput  matInput
+        type="text"
+        formControlName="username"
+        id="username"
+        required>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput  matInput
+        type="password"
+        formControlName="password"
+        [type]="hide ? 'password' : 'text'"
+        required>
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>First name</mat-label>
+        <input matInput  matInput
+        type="text"
+        formControlName="firstName"
+        id="firstName"
+        required>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Last name</mat-label>
+        <input matInput  matInput
+        type="text"
+        formControlName="lastName"
+        id="lastName"
+        required>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>User role</mat-label>
+        <mat-select formControlName="role" id="role">
+          <mat-option *ngFor="let role of roles" [value]="role.value">
+            {{ role.label }}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</mat-dialog-content> 
+
+<mat-dialog-actions class="bttns-div">
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            (disabled)="addUserForm.valid"
+            >
+            Submit
+        </button>
+    </div>
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="cancel-button"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</mat-dialog-actions>

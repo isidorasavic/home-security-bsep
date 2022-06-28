@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddTenantModal } from './add-tenant-modal/add-tenant-modal.component';
 import { AddDeviceModal } from './add-device-modal/add-device-modal.component';
 import { ConfirmModal } from './confirm-modal/confirm-modal.component';
+import { AddUserModal } from './add-user-modal/add-user-modal.component';
 
 import {MaterialModule} from './material-module'
 
@@ -27,7 +28,8 @@ import {MaterialModule} from './material-module'
     BoardUserComponent,
     AddTenantModal,
     AddDeviceModal,
-    ConfirmModal
+    ConfirmModal,
+    AddUserModal
   ],
   imports: [
     BrowserModule,
