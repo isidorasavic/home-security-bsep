@@ -35,7 +35,6 @@ public class ObjectController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    //izmeniti da se username ni ne salje nego uzima na beku TODO
     @GetMapping(path = "/user/{username}/objects")
     @ResponseStatus(HttpStatus.OK)
     public List<ObjectDTO> getOwnerObjects(@PathVariable("username") String username) {
@@ -93,11 +92,4 @@ public class ObjectController {
         return objectService.addObject(objectDTO);
     }
 
-
-//    @ResponseBody
-//    @GetMapping(path = "/all/{username}/objects")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<UserDTO> getPotentialTenants(@RequestParam("objectId") long objectId) {
-//        return objectService.getPotentialTenants(objectId);
-//    }
 }

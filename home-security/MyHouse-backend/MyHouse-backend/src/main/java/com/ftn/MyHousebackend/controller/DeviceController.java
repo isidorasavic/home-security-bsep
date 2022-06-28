@@ -27,6 +27,7 @@ public class DeviceController {
     @ResponseBody
     @GetMapping(path = "/device/{deviceId}/messages")
     @ResponseStatus(HttpStatus.OK)
+    //TODO: sve role
     public List<ObjectMessageDTO> getDeviceMessages(@PathVariable("deviceId") long deviceId) {
         return objectMessageService.getAllMessagesForDevice(deviceId);
     }
@@ -34,7 +35,7 @@ public class DeviceController {
     @ResponseBody
     @GetMapping(path = "/object/{objectId}/devices")
     @ResponseStatus(HttpStatus.OK)
-    //TODO
+    //TODO sve role
     public List<DeviceDTO> getObjectDevices(@PathVariable("objectId") long objectId) {
         return deviceService.getAllDevicesForObject(objectId);
     }
@@ -42,7 +43,7 @@ public class DeviceController {
     @ResponseBody
     @PostMapping(path = "/device")
     @ResponseStatus(HttpStatus.OK)
-    //TODO
+    //TODO sve role
     public DeviceDTO addDevice(@RequestBody DeviceDTO deviceDTO) {
         return deviceService.addDevice(deviceDTO);
     }

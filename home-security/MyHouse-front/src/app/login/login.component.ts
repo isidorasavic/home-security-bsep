@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
         console.log(data)
         this.isLoggedIn = true;
         this.isLoginFailed = false;
-        //TODO: u zavisnosti od tipa korisnika, redirectuje na druga mesta
         this.router.navigate(['/home']);
       },
     error: (err: any) => {
