@@ -133,6 +133,29 @@ public class ObjectService {
         return report;
     }
 
+    public ObjectDTO changeObjectOwner(long objectId, long userId){
+        Optional<Object> optObject = objectRepository.findById(objectId);
+        if (optObject.isEmpty()) throw new ObjectNotFound("Object not found!");
+        Object object = optObject.get();
+
+        Optional<User> optionalUser = userRepository.findByIdAndDeletedIsFalse(userId);
+        if(optionalUser.isEmpty()) throw new UserNotFoundException("User not found!");
+        User user = optionalUser.get();
 
 
+        if (user.getRole() != UserRole.OWNER) throw new InvalidArgumentException("User is not OWNER!");
+
+        object.setOwner(user);
+        objectRepository.saveAndFlush(object);
+
+        return new ObjectDTO(object);
+    }
+
+    public List<ObjectDTO> getAllObjects(){
+        List<ObjectDTO> objects = new ArrayList<>();
+        objectRepository.findAll().forEach(object -> {
+            objects.add(new ObjectDTO(object));
+        });
+        return objects;
+    }
 }

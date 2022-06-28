@@ -37,17 +37,17 @@ export class AddTenantModal implements OnInit {
   onSubmit(): void {
     this.objectService.addTenant(this.data.selectedObject.id, this.addTenantForm.value.tenant).subscribe({
       next: (success: any) => {
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       },
       error: (error: any) => {
         console.log(error);
-        this.dialogRef.close();
+        this.dialogRef.close(false);
       },
     });
   }
 
 
   onCancel():void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }

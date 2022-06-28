@@ -28,17 +28,17 @@ export class AddDeviceModal implements OnInit {
   onSubmit(): void {
     this.deviceService.addDevice(this.data.selectedObject.id, this.addDeviceForm.value.name, this.addDeviceForm.value.type).subscribe({
       next: (success: any) => {
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       },
       error: (error: any) => {
         console.log(error);
-        this.dialogRef.close();
+        this.dialogRef.close(false);
       },
     });
   }
 
 
   onCancel():void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }

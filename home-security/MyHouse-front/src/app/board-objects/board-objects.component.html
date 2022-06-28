@@ -1,0 +1,92 @@
+<div class="home-component">
+  <div class="object-content-div">
+    <div class="my-objects-title-div">
+      All objects
+    </div>
+    <div>
+      <div *ngFor="let object of objectsList; let i = index" class="object-list-elem">
+        <button class="btn btn-block" (click)="selectObject(i)">
+          {{object.name}}
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="my-objects-title-div">
+      Owner
+    </div>
+    <div>
+      <div class="object-list-elem">
+        <button class="btn btn-block">
+          {{selectedObject.owner.username}}
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="my-objects-title-div">
+      Tenants
+    </div>
+    <div>
+      <div *ngFor="let user of selectedObject.tenants; let i = index" class="object-list-elem">
+        <button class="btn btn-block">
+          {{user.username}}
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="object-content-div">
+    <div class='object-title-div'>
+      {{selectedObject.name}}
+    </div>
+    <div class="object-type-div">
+      {{selectedObject.type}}
+    </div>
+    <!-- <div class="object-type-div">
+      Owner: {{selectedObject.owner.firstName}} {{selectedObject.owner.lastName}}
+    </div> -->
+    <div class="messages-div">
+      <table class="messages-table">
+        <tr>
+          <th></th>
+          <th>Device</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+        <tr *ngFor="let message of messagesList; let i = index" [class]="message.messageType">
+          <td>{{i+1}}.</td>
+          <td><mat-icon>{{message.device.type}}_outline</mat-icon>{{message.device.name}}</td>
+          <td>{{message.message}}</td>
+          <td>{{message.date}}</td>
+          <td>{{message.time}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="object-content-div">
+    <div class="select-device-div">
+      <label>Select device</label>
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="selectedDevice" (selectionChange)="getDeviceMessages()">
+          <mat-option [value]="-1">All devices</mat-option>
+          <mat-option *ngFor="let device of devicesList" [value]="device.id">
+            {{device.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="add-device-div">
+      <mat-divider></mat-divider>
+      <button mat-stroked-button color="primary" (click)="openAddDeviceDialog()">Add new device</button>
+    </div>
+    <div class="add-device-div">
+      <mat-divider></mat-divider>
+      <button mat-stroked-button color="primary"(click)="openAddTennantDialog()">Add new tenant</button>
+    </div>
+    <div class="add-device-div">
+      <mat-divider></mat-divider>
+      <button mat-stroked-button color="primary">Add new object</button>
+    </div>
+  </div>
+</div>

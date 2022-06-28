@@ -69,6 +69,22 @@ public class ObjectController {
         return objectService.getReport(id, dateFrom, dateTo);
     }
 
+    @ResponseBody
+    @GetMapping(path = "/allObjects")
+    //admin
+    @ResponseStatus(HttpStatus.OK)
+    public List<ObjectDTO> getAllObjects() {
+        return objectService.getAllObjects();
+    }
+
+    @ResponseBody
+    @PutMapping(path = "/changeObject/{object_id}/owner")
+    //admin
+    @ResponseStatus(HttpStatus.OK)
+    public ObjectDTO changeOwner(@PathVariable("object_id") long object_id, @RequestParam("user_id") long user_id) {
+        return objectService.changeObjectOwner(object_id, user_id);
+    }
+
 //    @ResponseBody
 //    @GetMapping(path = "/all/{username}/objects")
 //    @ResponseStatus(HttpStatus.OK)

@@ -15,11 +15,11 @@ import { Report } from '../__classes/report';
 import { ReportModal } from '../report-modal/report-modal.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-board-objects',
+  templateUrl: './board-objects.component.html',
+  styleUrls: ['./board-objects.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class BoardObjectsComponent implements OnInit {
   selectedObject: Object;
   objectsList: Object[];
   messagesList: Message[];
@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   selectedDevice: number;
   userRole: string;
   report: Report;
+  
   constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
     this.objectsList = [];
     this.selectedObject = new Object();
@@ -38,10 +39,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.tokenStorage.getUserRole() === "ADMIN"){
-      this.router.navigate(['/user']);
+    if (this.tokenStorage.getUserRole() !== "ADMIN"){
+      this.router.navigate(['/home']);
     }
-    this.objectService.getOwnerObjects(this.tokenStorage.getUser()).subscribe(
+    this.objectService.getAllObjects().subscribe(
       (data:any) => {
         console.log('data:',data[0])
         this.objectsList = data;
@@ -125,10 +126,7 @@ export class HomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('The dialog was closed!');
-      if (result){
-        window.location.reload();
-      }
-      
+      window.location.reload();
     });
   }
 
@@ -138,12 +136,9 @@ export class HomeComponent implements OnInit {
       data: {selectedObject: this.selectedObject},
     });
 
-    dialogRef.afterClosed().subscribe((result: any) => {
+    dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
-      if(result){
-        this.getDevices();
-      }
-      
+      this.getDevices();
     });
   }
 

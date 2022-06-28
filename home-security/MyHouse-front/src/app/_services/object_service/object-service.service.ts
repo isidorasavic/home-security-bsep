@@ -40,4 +40,8 @@ export class ObjectService {
       return this.http.get(environment.BASE_PATH+'object/'+id+'/report/from/'+dateFrom+'/to/'+dateTo, httpOptions);
     }
 
+    getAllObjects(): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'allObjects', httpOptions);
+    }
+
 }
