@@ -21,6 +21,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(error);
     }
 
+    @ExceptionHandler(UserContainsObjectsException.class)
+    protected ResponseEntity<Object> userContainsObjectsException(UserContainsObjectsException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN);
+        error.setMessage(e.getMessage());
+        return buildResponseEntity(error);
+    }
+
     @ExceptionHandler(UserAlreadyExists.class)
     protected ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExists e) {
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_ACCEPTABLE);

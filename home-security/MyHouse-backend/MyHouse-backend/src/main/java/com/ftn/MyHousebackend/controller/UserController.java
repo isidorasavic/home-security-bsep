@@ -58,10 +58,10 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(path = "/user/changeRole")
+    @PutMapping(path = "/user/{id}/changeRole")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO changeRole(@RequestParam("username") String username, @RequestParam("newRole") String newRole) {
-        return userService.changeRole(username, newRole);
+    public UserDTO changeRole(@PathVariable("id") long id, @RequestParam("newRole") String newRole) {
+        return userService.changeRole(id, newRole);
     }
 
     @ResponseBody

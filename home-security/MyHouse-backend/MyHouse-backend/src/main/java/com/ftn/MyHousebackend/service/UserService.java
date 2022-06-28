@@ -7,11 +7,10 @@ import java.util.Optional;
 import javax.management.relation.RoleNotFoundException;
 
 import com.ftn.MyHousebackend.dto.UserDTO;
-import com.ftn.MyHousebackend.exception.RoleNotFound;
-import com.ftn.MyHousebackend.exception.UserAlreadyExists;
-import com.ftn.MyHousebackend.exception.UserNotFoundException;
+import com.ftn.MyHousebackend.exception.*;
 import com.ftn.MyHousebackend.model.User;
 import com.ftn.MyHousebackend.model.enums.UserRole;
+import com.ftn.MyHousebackend.repository.ObjectRepository;
 import com.ftn.MyHousebackend.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,9 @@ public class UserService implements UserDetailsService{
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     @Autowired
 	private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ObjectRepository objectRepository;
 
 
     @Autowired
@@ -79,20 +81,30 @@ public class UserService implements UserDetailsService{
         }
     }
 
-    public UserDTO changeRole(String username,String newRole){
-        if(!newRole.equals("OWNER") && !newRole.equalsIgnoreCase("TENANT")){
+    public UserDTO changeRole(long id,String newRole){
+        UserRole role;
+        try{
+            role = UserRole.valueOf(newRole);
+        }
+        catch (Exception e){
             throw new RoleNotFound("Role not found!");
         }
-        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        Optional<User> userOptional = userRepository.findByIdAndDeletedIsFalse(id);
         if (userOptional.isEmpty()){
             throw new UsernameNotFoundException("User not found!");
         }
-        else{
-            User user = userOptional.get();
-            user.setRole(UserRole.valueOf(newRole));
-            userRepository.saveAndFlush(user);
-            return new UserDTO(user);
+        User user = userOptional.get();
+
+        if(user.getRole() == UserRole.ADMIN) throw new InvalidArgumentException("Admin can't change role!");
+
+        if (objectRepository.findAllByOwnerId(id).size()!= 0 && user.getRole() == UserRole.OWNER && role==UserRole.TENANT) {
+            throw new UserContainsObjectsException("User owns objects and can't be turned to tennant!");
         }
+
+        user.setRole(role);
+        userRepository.saveAndFlush(user);
+        return new UserDTO(user);
     }
 
     public UserDTO addUser(UserDTO userDTO){

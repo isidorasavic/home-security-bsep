@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
 import { AddUserModal } from '../add-user-modal/add-user-modal.component';
+import { ChangeUserRoleModal } from '../change-user-role-modal/change-user-role-modal.component';
 
 @Component({
   selector: 'app-board-user',
@@ -119,6 +120,18 @@ export class BoardUserComponent implements OnInit {
     });
   }
 
-  
+  changeRole(): void {
+    console.log("change user role: "+this.selectedUser.username);
+    const dialogRef = this.dialog.open(ChangeUserRoleModal, {
+      width: '400px',
+      data: {selectedUser: this.selectedUser},
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log('Confirmed: ', result);
+      window.location.reload();
+
+    });
+  }
 
 }

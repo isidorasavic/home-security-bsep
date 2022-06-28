@@ -27,6 +27,10 @@ export class UserService {
   blockUnblockUser(id: number): Observable<any> {
     return this.http.put(environment.BASE_PATH + 'blockUnblock/'+id, httpOptions);
   }
+
+  changeRole(id: number, newRole: string): Observable<any> {
+    return this.http.put(environment.BASE_PATH + 'user/'+id+'/changeRole?newRole='+newRole, httpOptions);
+  }
   // getUserBoard(): Observable<any> {
   //   return this.http.get(environment.BASE_PATH + 'user', { responseType: 'text' });
   // }

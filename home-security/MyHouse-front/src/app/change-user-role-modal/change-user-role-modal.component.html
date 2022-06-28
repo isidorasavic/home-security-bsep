@@ -1,0 +1,39 @@
+<h2 mat-dialog-title class="title">Change role for {{data.selectedUser.username}}</h2>
+<mat-dialog-content [formGroup]="changeRoleForm">
+    <mat-form-field appearance="fill">
+        <mat-label>New role</mat-label>
+        <mat-select formControlName="role" id="role">
+          <mat-option *ngFor="let role of roles" [value]="role.value">
+            {{ role.label }}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</mat-dialog-content> 
+
+<mat-dialog-actions class="bttns-div">
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            >
+            Submit
+        </button>
+    </div>
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="cancel-button"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</mat-dialog-actions>
