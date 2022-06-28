@@ -9,14 +9,15 @@ import javax.management.relation.RoleNotFoundException;
 import com.ftn.MyHousebackend.dto.UserDTO;
 import com.ftn.MyHousebackend.exception.*;
 import com.ftn.MyHousebackend.model.User;
+import com.ftn.MyHousebackend.model.UserFailedLogins;
 import com.ftn.MyHousebackend.model.enums.UserRole;
 import com.ftn.MyHousebackend.repository.ObjectRepository;
+import com.ftn.MyHousebackend.repository.UserFailedLoginsRepository;
 import com.ftn.MyHousebackend.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -27,12 +28,15 @@ import org.slf4j.LoggerFactory;
 public class UserService implements UserDetailsService{
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
 	private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ObjectRepository objectRepository;
 
+    @Autowired
+    private UserFailedLoginsRepository userFailedLoginsRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -54,12 +58,16 @@ public class UserService implements UserDetailsService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username){
         Optional<User> user = userRepository.findByUsernameAndDeletedIsFalseAndBlockedIsFalse(username);
         if(user.isPresent()){
             return user.get();
         }
         throw new UserNotFoundException("User not found!");
+    }
+
+    public boolean doesUserExist(String username){
+        return userRepository.findByUsernameAndDeletedIsFalse(username).isPresent();
     }
 
     public List<UserDTO> searchUsers(String searchWord){
@@ -71,7 +79,7 @@ public class UserService implements UserDetailsService{
     public UserDTO deleteUser(long id){
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()){
-            throw new UsernameNotFoundException("User not found!");
+            throw new UserNotFoundException("User not found!");
         }
         else{
             User user = userOptional.get();
@@ -92,7 +100,7 @@ public class UserService implements UserDetailsService{
 
         Optional<User> userOptional = userRepository.findByIdAndDeletedIsFalse(id);
         if (userOptional.isEmpty()){
-            throw new UsernameNotFoundException("User not found!");
+            throw new UserNotFoundException("User not found!");
         }
         User user = userOptional.get();
 
@@ -145,6 +153,41 @@ public class UserService implements UserDetailsService{
             users.add(new UserDTO(user));
         });
         return users;
+    }
+
+    public UserDTO addFailedLogin(String username){
+        User user = (User) loadUserByUsername(username);
+
+        Optional<UserFailedLogins> optionalUserFailedLogins = userFailedLoginsRepository.findByUser_Id(user.getId());
+        if (optionalUserFailedLogins.isPresent()){
+            UserFailedLogins failedLogins = optionalUserFailedLogins.get();
+            failedLogins.setFailedLogins(failedLogins.getFailedLogins()+1);
+            userFailedLoginsRepository.saveAndFlush(failedLogins);
+
+            if (failedLogins.getFailedLogins() >= 5){
+                user.setBlocked(true);
+                userRepository.saveAndFlush(user);
+            }
+        }
+        else {
+            UserFailedLogins newFailedLogins = new UserFailedLogins();
+            newFailedLogins.setUser(user);
+            newFailedLogins.setFailedLogins(1);
+            userFailedLoginsRepository.saveAndFlush(newFailedLogins);
+        }
+
+        return new UserDTO(user);
+    }
+
+    public void removeFailedLogins(String username){
+        User user = (User) loadUserByUsername(username);
+
+        Optional<UserFailedLogins> optionalUserFailedLogins = userFailedLoginsRepository.findByUser_Id(user.getId());
+        if (optionalUserFailedLogins.isPresent()){
+            UserFailedLogins failedLogins = optionalUserFailedLogins.get();
+            failedLogins.setFailedLogins(0);
+            userFailedLoginsRepository.saveAndFlush(failedLogins);
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import com.ftn.MyHousebackend.security.security.authentication.RestAuthenticatio
 import com.ftn.MyHousebackend.security.security.authentication.TokenAuthenticationFilter;
 import com.ftn.MyHousebackend.service.CustomUserDetailsService;
 
+import org.apache.catalina.util.CustomObjectInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
@@ -52,6 +54,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
 	@Autowired
 	private TokenUtils tokenUtils;
+
     
 
     @Override
@@ -65,7 +68,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 				.antMatchers("/api/**").permitAll() // TODO: ispraviti
                 .anyRequest().authenticated() // protect all other requests
-		.and()
+				.and()
 			.cors()
 		.and()
 			// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
@@ -75,6 +78,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.xssProtection()
 			.and()
 			.contentSecurityPolicy("script-src 'self'");
+
 			
 
 		http.csrf().disable(); // disable cross site request forgery, as we don't use cookies - otherwise ALL PUT, POST, DELETE will get HTTP 403!

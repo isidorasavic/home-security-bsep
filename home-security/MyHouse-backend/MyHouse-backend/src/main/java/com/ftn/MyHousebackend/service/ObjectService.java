@@ -52,12 +52,10 @@ public class ObjectService {
         List<ObjectDTO> objectsList = new ArrayList<>();
         objectRepository.findAllByOwnerId(user.getId()).forEach(object -> {
             objectsList.add(new ObjectDTO(object));
-            LOG.info(object.getName());
         });
         objectRepository.findAllByOwnerIdNot(user.getId()).forEach(object -> {
             if(object.getTenants().contains(user)){
                 objectsList.add(new ObjectDTO(object));
-                LOG.info(object.getName());
             }
         });
 
@@ -120,7 +118,6 @@ public class ObjectService {
 
         List<ObjectMessage> messages = objectMessageRepository.findAllByObject_IdAndDateIsAfterAndDateIsBeforeAndMessageTypeIsNotOrderByDate(id, startDate, endDate, MessageType.MESSAGE);
 
-        LOG.info("num of messages: "+messages.size());
         ReportDTO report = new ReportDTO();
         report.setObject(new ObjectDTO(object));
         report.setDateForm(startDate.toString());
