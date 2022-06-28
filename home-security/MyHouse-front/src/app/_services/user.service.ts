@@ -15,6 +15,10 @@ export class UserService {
   getAllUsers(): Observable<any> {
     return this.http.get(environment.BASE_PATH + 'users/list', httpOptions);
   }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(environment.BASE_PATH + 'user/delete/'+id, httpOptions);
+  }
   // getUserBoard(): Observable<any> {
   //   return this.http.get(environment.BASE_PATH + 'user', { responseType: 'text' });
   // }

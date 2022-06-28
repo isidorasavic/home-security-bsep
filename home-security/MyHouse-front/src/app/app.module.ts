@@ -12,7 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddTenantModal } from './add-tenant-modal/add-tenant-modal.component';
-import { AddDeviceModal } from './add-device-modal/add-device-modal.component'
+import { AddDeviceModal } from './add-device-modal/add-device-modal.component';
+import { ConfirmModal } from './confirm-modal/confirm-modal.component';
 
 import {MaterialModule} from './material-module'
 
@@ -25,7 +26,8 @@ import {MaterialModule} from './material-module'
     ProfileComponent,
     BoardUserComponent,
     AddTenantModal,
-    AddDeviceModal
+    AddDeviceModal,
+    ConfirmModal
   ],
   imports: [
     BrowserModule,

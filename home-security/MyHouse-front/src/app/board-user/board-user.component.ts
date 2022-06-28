@@ -9,6 +9,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { AddDeviceModal } from '../add-device-modal/add-device-modal.component';
 import { Router } from '@angular/router';
 import { UserService } from '../_services/user.service';
+import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-board-user',
@@ -19,11 +20,13 @@ export class BoardUserComponent implements OnInit {
   selectedUser: User;
   usersList: User[];
   userObjects: Object[];
+  modalMessage: String;
 
   constructor(private userService: UserService,private objectService: ObjectService,  private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
     this.selectedUser = new User();
     this.usersList = [];
     this.userObjects = [];
+    this.modalMessage = '';
   }
 
   ngOnInit(): void {
@@ -58,11 +61,40 @@ export class BoardUserComponent implements OnInit {
   deleteUser(): void {
     console.log("prompt admin to delete user")
     console.log("delete user: "+this.selectedUser.username);
+    this.modalMessage = "Are you sure you want to delete user: "+this.selectedUser.username+"?"
+    const dialogRef = this.dialog.open(ConfirmModal, {
+      width: '400px',
+      data: {modalMessage: this.modalMessage},
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log('Confirmed: ', result);
+      if (result) {
+        this.userService.deleteUser(this.selectedUser.id).subscribe(
+          (response:any) => {
+            console.log(response)
+            window.location.reload();
+          },
+          (err:any) => {
+            console.log((err.error).message);
+          }
+        );
+      }
+    });
   }
 
   blockUser() : void {
     console.log("block user: "+this.selectedUser.username);
     console.log("inform that user is blocked");
+    this.modalMessage = "Are you sure you want to block user: "+this.selectedUser.username+"?"
+    const dialogRef = this.dialog.open(ConfirmModal, {
+      width: '400px',
+      data: {modalMessage: this.modalMessage},
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log('Confirmed: ', result);
+    });
   }
 
   

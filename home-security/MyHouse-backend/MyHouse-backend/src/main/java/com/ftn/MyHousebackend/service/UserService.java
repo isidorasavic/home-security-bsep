@@ -66,13 +66,15 @@ public class UserService implements UserDetailsService{
         return users;
     }
 
-    public UserDTO deleteUser(String username){
-        Optional<User> userOptional = userRepository.findByUsername(username);
+    public UserDTO deleteUser(long id){
+        Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()){
             throw new UsernameNotFoundException("User not found!");
         }
         else{
-            userRepository.delete(userOptional.get());
+            User user = userOptional.get();
+            user.setDeleted(true);
+            userRepository.saveAndFlush(user);
             return new UserDTO(userOptional.get());
         }
     }

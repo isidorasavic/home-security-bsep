@@ -50,10 +50,10 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(path = "/user/delete/{username}")
+    @DeleteMapping(path = "/user/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO deleteUser(@PathVariable("username") String username) {
-        return userService.deleteUser(username);
+    public UserDTO deleteUser(@PathVariable("id") long id) {
+        return userService.deleteUser(id);
     }
 
     @ResponseBody
