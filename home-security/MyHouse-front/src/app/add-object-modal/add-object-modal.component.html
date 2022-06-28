@@ -1,0 +1,55 @@
+<h2 mat-dialog-title class="title">Add new object</h2>
+<mat-dialog-content [formGroup]="addObjectForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Object name</mat-label>
+        <input matInput  matInput
+        type="text"
+        formControlName="name"
+        id="name"
+        required>
+    </mat-form-field>
+    <mat-form-field class="input">
+        <mat-label>Object type</mat-label>
+        <mat-select formControlName="type" id="type">
+          <mat-option *ngFor="let type of objectTypes" [value]="type.value">
+            {{ type.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    <mat-form-field class="input">
+        <mat-label>Owner</mat-label>
+        <mat-select formControlName="owner" id="owner">
+          <mat-option *ngFor="let owner of ownersList" [value]="owner.id">
+            {{ owner.firstName }} {{ owner.lastName }} ({{owner.username}})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>  
+</mat-dialog-content> 
+
+<mat-dialog-actions class="bttns-div">
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            [disabled]="!addObjectForm.valid"
+            >
+            Submit
+        </button>
+    </div>
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="cancel-button"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</mat-dialog-actions>

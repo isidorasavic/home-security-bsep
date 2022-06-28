@@ -44,4 +44,12 @@ export class ObjectService {
       return this.http.get(environment.BASE_PATH+'allObjects', httpOptions);
     }
 
+    changeObjectOwner(objectId: number, userId: number): Observable<any> {
+      return this.http.get(environment.BASE_PATH+'changeObject/'+objectId+'/owner?user_id='+userId, httpOptions);
+    }
+
+    addObject(object: any): Observable<any> {
+      return this.http.post(environment.BASE_PATH+'addObject', object, httpOptions);
+    }
+
 }

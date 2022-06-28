@@ -85,6 +85,15 @@ public class ObjectController {
         return objectService.changeObjectOwner(object_id, user_id);
     }
 
+    @ResponseBody
+    @PostMapping(path = "/addObject")
+    //admin
+    @ResponseStatus(HttpStatus.OK)
+    public ObjectDTO addObject(@RequestBody ObjectDTO objectDTO) {
+        return objectService.addObject(objectDTO);
+    }
+
+
 //    @ResponseBody
 //    @GetMapping(path = "/all/{username}/objects")
 //    @ResponseStatus(HttpStatus.OK)

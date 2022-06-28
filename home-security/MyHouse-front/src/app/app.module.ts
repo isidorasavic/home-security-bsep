@@ -19,6 +19,7 @@ import {ChangeUserRoleModal} from './change-user-role-modal/change-user-role-mod
 import { GenerateReportModal } from './generate-report-modal/generate-report-modal.component';
 import {ReportModal} from './report-modal/report-modal.component'
 import { BoardObjectsComponent } from './board-objects/board-objects.component';
+import {AddObjectModal} from './add-object-modal/add-object-modal.component'
 
 import {MaterialModule} from './material-module'
 
@@ -39,7 +40,8 @@ import {MaterialModule} from './material-module'
     ChangeUserRoleModal,
     GenerateReportModal,
     ReportModal,
-    BoardObjectsComponent
+    BoardObjectsComponent,
+    AddObjectModal
   ],
   imports: [
     BrowserModule,

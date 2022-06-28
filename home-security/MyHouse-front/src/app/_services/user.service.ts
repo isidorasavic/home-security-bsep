@@ -31,6 +31,10 @@ export class UserService {
   changeRole(id: number, newRole: string): Observable<any> {
     return this.http.put(environment.BASE_PATH + 'user/'+id+'/changeRole?newRole='+newRole, httpOptions);
   }
+
+  getAllOwners(): Observable<any> {
+    return this.http.get(environment.BASE_PATH + 'owners/list', httpOptions);
+  }
   // getUserBoard(): Observable<any> {
   //   return this.http.get(environment.BASE_PATH + 'user', { responseType: 'text' });
   // }

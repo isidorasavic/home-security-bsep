@@ -13,6 +13,7 @@ import { AddUserModal } from '../add-user-modal/add-user-modal.component';
 import { GenerateReportModal } from '../generate-report-modal/generate-report-modal.component';
 import { Report } from '../__classes/report';
 import { ReportModal } from '../report-modal/report-modal.component';
+import { AddObjectModal } from '../add-object-modal/add-object-modal.component';
 
 @Component({
   selector: 'app-board-objects',
@@ -126,7 +127,10 @@ export class BoardObjectsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log('The dialog was closed!');
-      window.location.reload();
+      if (result){
+        window.location.reload();
+      }
+      
     });
   }
 
@@ -136,9 +140,11 @@ export class BoardObjectsComponent implements OnInit {
       data: {selectedObject: this.selectedObject},
     });
 
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe((response) => {
       console.log('The dialog was closed');
-      this.getDevices();
+      if (response){
+        this.getDevices();
+      }
     });
   }
 
@@ -161,6 +167,20 @@ export class BoardObjectsComponent implements OnInit {
           console.log('Report was closed');
           this.report = new Report();
         });
+      }
+    });
+  }
+
+  openAddObjectDialog(): void {
+    const dialogRef = this.dialog.open(AddObjectModal, {
+      width: '400px',
+      data: {selectedObject: this.selectedObject},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      if (result) {
+        window.location.reload();
       }
     });
   }

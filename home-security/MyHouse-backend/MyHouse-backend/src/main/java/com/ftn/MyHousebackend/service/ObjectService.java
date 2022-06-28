@@ -12,6 +12,7 @@ import com.ftn.MyHousebackend.model.Object;
 import com.ftn.MyHousebackend.model.ObjectMessage;
 import com.ftn.MyHousebackend.model.User;
 import com.ftn.MyHousebackend.model.enums.MessageType;
+import com.ftn.MyHousebackend.model.enums.ObjectType;
 import com.ftn.MyHousebackend.model.enums.UserRole;
 import com.ftn.MyHousebackend.repository.ObjectMessageRepository;
 import com.ftn.MyHousebackend.repository.ObjectRepository;
@@ -157,5 +158,21 @@ public class ObjectService {
             objects.add(new ObjectDTO(object));
         });
         return objects;
+    }
+
+    public ObjectDTO addObject(ObjectDTO newObjectDTO){
+        Object newObject = new Object();
+        newObject.setName(newObjectDTO.getName());
+
+        Optional<User> optionalUser = userRepository.findByIdAndDeletedIsFalse(newObjectDTO.getOwner().getId());
+        if(optionalUser.isEmpty()) throw new UserNotFoundException("User not found!");
+        User user = optionalUser.get();
+        if (user.getRole() != UserRole.OWNER) throw new InvalidArgumentException("User is not OWNER!");
+
+        newObject.setOwner(user);
+        newObject.setObjectType(ObjectType.valueOf(newObjectDTO.getType()));
+        newObject.setTenants(new ArrayList<>());
+        objectRepository.saveAndFlush(newObject);
+        return new ObjectDTO(newObject);
     }
 }
