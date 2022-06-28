@@ -1,0 +1,39 @@
+<h2 mat-dialog-title class="title">Change object {{data.selectedObject.name}} owner</h2>
+<mat-dialog-content [formGroup]="changeOwnerForm">
+    <mat-form-field class="input">
+        <mat-label>Owner</mat-label>
+        <mat-select formControlName="owner" id="owner">
+          <mat-option *ngFor="let owner of ownersList" [value]="owner.id">
+            {{ owner.firstName }} {{ owner.lastName }} ({{owner.username}})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>  
+</mat-dialog-content> 
+
+<mat-dialog-actions class="bttns-div">
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            [disabled]="!changeOwnerForm.valid"
+            >
+            Submit
+        </button>
+    </div>
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="cancel-button"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</mat-dialog-actions>

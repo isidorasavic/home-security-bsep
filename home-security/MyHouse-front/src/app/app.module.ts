@@ -20,6 +20,7 @@ import { GenerateReportModal } from './generate-report-modal/generate-report-mod
 import {ReportModal} from './report-modal/report-modal.component'
 import { BoardObjectsComponent } from './board-objects/board-objects.component';
 import {AddObjectModal} from './add-object-modal/add-object-modal.component'
+import { ChangeObjectOwnerModal } from './change-object-owner-modal/change-object-owner-modal.component';
 
 import {MaterialModule} from './material-module'
 
@@ -41,7 +42,8 @@ import {MaterialModule} from './material-module'
     GenerateReportModal,
     ReportModal,
     BoardObjectsComponent,
-    AddObjectModal
+    AddObjectModal,
+    ChangeObjectOwnerModal
   ],
   imports: [
     BrowserModule,
