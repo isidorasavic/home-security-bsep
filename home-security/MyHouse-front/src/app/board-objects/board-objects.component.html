@@ -1,7 +1,7 @@
 <div class="home-component">
   <div class="object-content-div">
     <div class="my-objects-title-div">
-      My objects
+      All objects
     </div>
     <div>
       <div *ngFor="let object of objectsList; let i = index" class="object-list-elem">
@@ -11,6 +11,7 @@
       </div>
     </div>
     <mat-divider></mat-divider>
+
     <div class="my-objects-title-div">
       Owner
     </div>
@@ -32,6 +33,7 @@
         </button>
       </div>
     </div>
+
   </div>
   <div class="object-content-div">
     <div class='object-title-div'>
@@ -40,6 +42,9 @@
     <div class="object-type-div">
       {{selectedObject.type}}
     </div>
+    <!-- <div class="object-type-div">
+      Owner: {{selectedObject.owner.firstName}} {{selectedObject.owner.lastName}}
+    </div> -->
     <div class="messages-div">
       <table class="messages-table">
         <tr>
@@ -71,17 +76,21 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="add-device-div" *ngIf="isUserOwner() && isUserOwnerOfObject()">
+    <div class="add-device-div">
       <mat-divider></mat-divider>
       <button mat-stroked-button color="primary" (click)="openAddDeviceDialog()">Add new device</button>
     </div>
-    <div class="add-device-div" *ngIf="isUserOwner() && isUserOwnerOfObject()">
+    <div class="add-device-div">
       <mat-divider></mat-divider>
       <button mat-stroked-button color="primary"(click)="openAddTennantDialog()">Add new tenant</button>
     </div>
     <div class="add-device-div">
       <mat-divider></mat-divider>
-      <button mat-stroked-button color="primary" (click)="generateReport()">Generate report</button>
+      <button mat-stroked-button color="primary" (click)="changeObjectOwner()">Change object owner</button>
+    </div>
+    <div class="add-device-div">
+      <mat-divider></mat-divider>
+      <button mat-stroked-button color="primary" (click)="openAddObjectDialog()">Add new object</button>
     </div>
   </div>
 </div>

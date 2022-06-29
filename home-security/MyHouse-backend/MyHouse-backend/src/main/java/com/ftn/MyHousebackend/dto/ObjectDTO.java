@@ -15,8 +15,19 @@ public class ObjectDTO {
     private long id;
     private String name;
     private String type;
-    private UserDTO owner; //ako ne bude potrebe da se salje ceo user poslati samo username ili id
+    private UserDTO owner;
     private List<UserDTO> tenants;
+
+    public ObjectDTO() {
+    }
+
+    public ObjectDTO(long id, String name, String type, UserDTO owner, List<UserDTO> tenants) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.owner = owner;
+        this.tenants = tenants;
+    }
 
     public ObjectDTO(Object object) {
         this.id = object.getId();

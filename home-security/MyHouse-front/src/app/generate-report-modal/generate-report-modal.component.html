@@ -1,0 +1,46 @@
+<h2 mat-dialog-title class="title">Generate report for object: {{data.selectedObject.name}}</h2>
+<mat-dialog-content [formGroup]="reportForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="dateFrom" formControlName="dateFrom" required [max]="reportForm.value.dateTo" >
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+        <mat-datepicker #dateFrom></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="dateTo" formControlName="dateTo" required  [min]="reportForm.value.dateFrom">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+        <mat-datepicker #dateTo></mat-datepicker>
+    </mat-form-field>
+
+</mat-dialog-content> 
+
+<mat-dialog-actions class="bttns-div">
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="submit-button"
+            (click)="onSubmit()"
+            [disabled]="!validDates()"
+            >
+            Submit
+        </button>
+    </div>
+    <div class="bttn-div">
+        <button
+            mat-stroked-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            id="cancel-button"
+            (click)="onCancel()"
+        >
+            Cancel
+        </button>
+    </div>
+</mat-dialog-actions>

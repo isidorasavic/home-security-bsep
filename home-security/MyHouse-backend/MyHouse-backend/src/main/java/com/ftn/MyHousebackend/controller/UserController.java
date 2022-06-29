@@ -79,4 +79,13 @@ public class UserController {
     public UserDTO blockUnblockUser(@PathVariable("id") long id) {
         return userService.blockUnblockUser(id);
     }
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/owners/list")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> getAllOwners() {
+        return userService.getAllOwners();
+    }
+
 }

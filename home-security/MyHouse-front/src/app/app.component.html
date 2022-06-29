@@ -8,6 +8,9 @@
       <li class="nav-item">
         <a href="/user" class="nav-link" *ngIf="isLoggedIn() && isAdmin()" routerLink="user">Users</a>
       </li>
+      <li class="nav-item">
+        <a href="/objects" class="nav-link" *ngIf="isLoggedIn() && isAdmin()" routerLink="objects">Objects</a>
+      </li>
     </ul>
     <!-- <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn()">
       <li class="nav-item">

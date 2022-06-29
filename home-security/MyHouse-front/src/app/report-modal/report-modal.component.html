@@ -1,0 +1,39 @@
+<div class="report-container">
+    <h1 mat-dialog-title class="title">Report</h1>
+    <mat-dialog-content>
+        <h2>Object: {{data.report.object.name}}</h2>
+        <h3>Date period {{data.report.dateFrom}}-{{data.report.dateTo}}</h3>
+        <table class="messages-table">
+            <tr>
+            <th></th>
+            <th>Device</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Time</th>
+            </tr>
+            <tr *ngFor="let message of data.report.messages; let i = index" [class]="message.messageType">
+            <td>{{i+1}}.</td>
+            <td><mat-icon>{{message.device.type}}_outline</mat-icon>{{message.device.name}}</td>
+            <td>{{message.message}}</td>
+            <td>{{message.date}}</td>
+            <td>{{message.time}}</td>
+            </tr>
+        </table>
+
+    </mat-dialog-content> 
+
+    <mat-dialog-actions class="bttns-div">
+        <div class="bttn-div">
+            <button
+                mat-stroked-button
+                color="primary"
+                type="submit"
+                class="submit-button"
+                id="submit-button"
+                (click)="onOk()"
+                >
+                OK
+            </button>
+        </div>
+    </mat-dialog-actions>
+</div>

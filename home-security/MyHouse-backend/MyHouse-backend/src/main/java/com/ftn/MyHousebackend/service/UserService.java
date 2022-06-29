@@ -139,4 +139,12 @@ public class UserService implements UserDetailsService{
         throw new UserNotFoundException("User not found!");
     }
 
+    public List<UserDTO> getAllOwners(){
+        List<UserDTO> users = new ArrayList<>();
+        userRepository.findByRoleAndDeletedIsFalse(UserRole.OWNER).forEach(user -> {
+            users.add(new UserDTO(user));
+        });
+        return users;
+    }
+
 }

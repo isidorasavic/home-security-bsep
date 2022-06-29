@@ -3,6 +3,7 @@ package com.ftn.MyHousebackend.controller;
 import antlr.Token;
 import com.ftn.MyHousebackend.dto.ObjectDTO;
 import com.ftn.MyHousebackend.dto.ObjectMessageDTO;
+import com.ftn.MyHousebackend.dto.ReportDTO;
 import com.ftn.MyHousebackend.dto.UserDTO;
 import com.ftn.MyHousebackend.model.ObjectMessage;
 import com.ftn.MyHousebackend.security.security.TokenUtils;
@@ -60,6 +61,38 @@ public class ObjectController {
     public List<UserDTO> getPotentialTenants(@RequestParam("objectId") long objectId) {
         return objectService.getPotentialTenants(objectId);
     }
+
+    @ResponseBody
+    @GetMapping(path = "/object/{id}/report/from/{dateFrom}/to/{dateTo}")
+    @ResponseStatus(HttpStatus.OK)
+    public ReportDTO getReport(@PathVariable("id") long id, @PathVariable("dateFrom") String dateFrom, @PathVariable("dateTo") String dateTo) {
+        return objectService.getReport(id, dateFrom, dateTo);
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/allObjects")
+    //admin
+    @ResponseStatus(HttpStatus.OK)
+    public List<ObjectDTO> getAllObjects() {
+        return objectService.getAllObjects();
+    }
+
+    @ResponseBody
+    @PutMapping(path = "/changeObject/{object_id}/owner")
+    //admin
+    @ResponseStatus(HttpStatus.OK)
+    public ObjectDTO changeOwner(@PathVariable("object_id") long object_id, @RequestParam("user_id") long user_id) {
+        return objectService.changeObjectOwner(object_id, user_id);
+    }
+
+    @ResponseBody
+    @PostMapping(path = "/addObject")
+    //admin
+    @ResponseStatus(HttpStatus.OK)
+    public ObjectDTO addObject(@RequestBody ObjectDTO objectDTO) {
+        return objectService.addObject(objectDTO);
+    }
+
 
 //    @ResponseBody
 //    @GetMapping(path = "/all/{username}/objects")

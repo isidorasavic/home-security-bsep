@@ -13,13 +13,15 @@ import { AddUserModal } from '../add-user-modal/add-user-modal.component';
 import { GenerateReportModal } from '../generate-report-modal/generate-report-modal.component';
 import { Report } from '../__classes/report';
 import { ReportModal } from '../report-modal/report-modal.component';
+import { AddObjectModal } from '../add-object-modal/add-object-modal.component';
+import { ChangeObjectOwnerModal } from '../change-object-owner-modal/change-object-owner-modal.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-board-objects',
+  templateUrl: './board-objects.component.html',
+  styleUrls: ['./board-objects.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class BoardObjectsComponent implements OnInit {
   selectedObject: Object;
   objectsList: Object[];
   messagesList: Message[];
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit {
   selectedDevice: number;
   userRole: string;
   report: Report;
+  
   constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
     this.objectsList = [];
     this.selectedObject = new Object();
@@ -38,10 +41,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.tokenStorage.getUserRole() === "ADMIN"){
-      this.router.navigate(['/user']);
+    if (this.tokenStorage.getUserRole() !== "ADMIN"){
+      this.router.navigate(['/home']);
     }
-    this.objectService.getOwnerObjects(this.tokenStorage.getUser()).subscribe(
+    this.objectService.getAllObjects().subscribe(
       (data:any) => {
         console.log('data:',data[0])
         this.objectsList = data;
@@ -138,35 +141,40 @@ export class HomeComponent implements OnInit {
       data: {selectedObject: this.selectedObject},
     });
 
-    dialogRef.afterClosed().subscribe((result: any) => {
+    dialogRef.afterClosed().subscribe((response) => {
       console.log('The dialog was closed');
-      if(result){
+      if (response){
         this.getDevices();
       }
-      
     });
   }
 
-  generateReport(): void {
-    const dialogRef = this.dialog.open(GenerateReportModal, {
+  openAddObjectDialog(): void {
+    const dialogRef = this.dialog.open(AddObjectModal, {
       width: '400px',
       data: {selectedObject: this.selectedObject},
     });
 
-    dialogRef.afterClosed().subscribe((response) => {
-      console.log('Report: ', response);
-      if (response !== null){
-        this.report = response;
-        const dialogRef = this.dialog.open(ReportModal, {
-          width: '600px',
-          data: {report: this.report},
-        });
-    
-        dialogRef.afterClosed().subscribe(() => {
-          console.log('Report was closed');
-          this.report = new Report();
-        });
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      if (result) {
+        window.location.reload();
       }
     });
+  }
+
+  changeObjectOwner(): void {
+    const dialogRef = this.dialog.open(ChangeObjectOwnerModal, {
+      width: '400px',
+      data: {selectedObject: this.selectedObject},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      if (result) {
+        window.location.reload();
+      }
+    });
+
   }
 }
