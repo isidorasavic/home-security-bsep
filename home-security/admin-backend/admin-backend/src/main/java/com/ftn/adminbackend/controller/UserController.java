@@ -2,37 +2,85 @@ package com.ftn.adminbackend.controller;
 
 import com.ftn.adminbackend.dto.UserDTO;
 import com.ftn.adminbackend.service.UserService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
 @RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Autowired
     private UserService userService;
 
 
-    @RequestMapping( value = "/addUser",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserDTO addUser(@RequestBody UserDTO newUser) throws Exception{
-        LOG.info("Recieved request to add new user: "+newUser.getUsername());
-        System.out.println(newUser.toString());
-        return userService.addUser(newUser);
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/search/{searchWord}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> searchUsers(@PathVariable("searchWord") String searchWord) {
+        return userService.searchUsers(searchWord);
+    }
 
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/list")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> findAllUsers() {
+        return userService.findAll();
+    }
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(path = "/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO deleteUser(@PathVariable("id") long id) {
+        return userService.deleteUser(id);
+    }
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(path = "/changeRole")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO changeRole(@RequestParam("id") long id, @RequestParam("newRole") String newRole) {
+        return userService.changeRole(id, newRole);
+    }
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(path = "/changeRoleUsername")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO changeRoleUsername(@RequestParam("username") String username, @RequestParam("newRole") String newRole) {
+        return userService.changeRoleUsername(username, newRole);
     }
 
 
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(path = "/addUser")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO addUser(@RequestBody UserDTO userDTO) {
+        return userService.addUser(userDTO);
+    }
+
+    @ResponseBody
+    // preauthorize admin
+    @PutMapping(path = "/blockUnblock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO blockUnblockUser(@PathVariable("id") long id) {
+        return userService.blockUnblockUser(id);
+    }
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/owners/list")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> getAllOwners() {
+        return userService.getAllOwners();
+    }
 }

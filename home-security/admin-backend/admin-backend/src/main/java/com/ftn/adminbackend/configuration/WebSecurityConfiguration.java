@@ -4,8 +4,8 @@ package com.ftn.adminbackend.configuration;
 import com.ftn.adminbackend.security.TokenUtils;
 import com.ftn.adminbackend.security.authentication.RestAuthenticationEntryPoint;
 import com.ftn.adminbackend.security.authentication.TokenAuthenticationFilter;
-import com.ftn.adminbackend.service.CustomUserDetailsService;
 
+import com.ftn.adminbackend.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Bean
+	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(10);
 	}
@@ -53,33 +53,33 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
 	@Autowired
 	private TokenUtils tokenUtils;
-    
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
 
-        http
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and() // No session will be created or used by spring security
-			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
-        .and()
-            .authorizeRequests()
-				.antMatchers("/api/**").permitAll() // TODO: ispraviti
-                .anyRequest().authenticated() // protect all other requests
-		.and()
-			.cors()
-		.and()
-			// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
-			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+
 		http
-			.headers()
-			.xssProtection()
-			.and()
-			.contentSecurityPolicy("script-src 'self'");
-			
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and() // No session will be created or used by spring security
+				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
+				.and()
+				.authorizeRequests()
+				.antMatchers("/api/**").permitAll() // TODO: ispraviti
+				.anyRequest().authenticated() // protect all other requests
+				.and()
+				.cors()
+				.and()
+				// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
+				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+		http
+				.headers()
+				.xssProtection()
+				.and()
+				.contentSecurityPolicy("script-src 'self'");
+
 
 		http.csrf().disable(); // disable cross site request forgery, as we don't use cookies - otherwise ALL PUT, POST, DELETE will get HTTP 403!
-    }
+	}
 
 	// Generalna bezbednost aplikacije
 	@Override
@@ -89,5 +89,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
 				"/**/*.css", "/**/*.js");
 		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
+		web.ignoring().antMatchers(HttpMethod.POST, "/api/**");
+		web.ignoring().antMatchers(HttpMethod.GET, "/api/**");
 	}
 }

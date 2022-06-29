@@ -28,7 +28,7 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     }
 
     @Override
-    public Collection<String> getMappingBasePackages() {
-        return Collections.singleton("org.websparrow");
+    public Collection getMappingBasePackages() {
+        return Collections.singleton("com.baeldung");
     }
 }

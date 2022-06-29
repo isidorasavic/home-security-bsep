@@ -18,6 +18,7 @@ import com.ftn.MyHousebackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -130,6 +131,30 @@ public class UserService implements UserDetailsService{
         newUser.setBlocked(false);
         userRepository.saveAndFlush(newUser);
         return userDTO;
+    }
+    public UserDTO changeRoleUsername(String username,String newRole){
+        UserRole role;
+        try{
+            role = UserRole.valueOf(newRole);
+        }
+        catch (Exception e){
+            throw new RoleNotFound("Role not found!");
+        }
+        Optional<User> userOptional = userRepository.findByUsernameAndDeletedIsFalse(username);
+        if (userOptional.isEmpty()){
+            throw new UsernameNotFoundException("User not found!");
+        }
+        User user = userOptional.get();
+
+        if(user.getRole() == UserRole.ADMIN) throw new InvalidArgumentException("Admin can't change role!");
+
+        if (objectRepository.findAllByOwnerId(user.getId()).size()!= 0 && user.getRole() == UserRole.OWNER && role==UserRole.TENANT) {
+            throw new UserContainsObjectsException("User owns objects and can't be turned to tennant!");
+        }
+
+        user.setRole(role);
+        userRepository.saveAndFlush(user);
+        return new UserDTO(user);
     }
 
     public UserDTO blockUnblockUser(long id) {
