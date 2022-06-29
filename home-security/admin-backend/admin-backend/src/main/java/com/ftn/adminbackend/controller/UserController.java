@@ -11,19 +11,16 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(path = "/user/search/{searchWord}")
+    @GetMapping(path = "/search/{searchWord}")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> searchUsers(@PathVariable("searchWord") String searchWord) {
         return userService.searchUsers(searchWord);
@@ -31,7 +28,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(path = "/users/list")
+    @GetMapping(path = "/list")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findAllUsers() {
         return userService.findAll();
@@ -39,7 +36,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(path = "/user/delete/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO deleteUser(@PathVariable("id") long id) {
         return userService.deleteUser(id);
@@ -47,7 +44,7 @@ public class UserController {
 
     @ResponseBody
     // @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(path = "/user/{id}/changeRole")
+    @PutMapping(path = "/{id}/changeRole")
     @ResponseStatus(HttpStatus.OK)
     public UserDTO changeRole(@PathVariable("id") long id, @RequestParam("newRole") String newRole) {
         return userService.changeRole(id, newRole);
@@ -67,5 +64,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserDTO blockUnblockUser(@PathVariable("id") long id) {
         return userService.blockUnblockUser(id);
+    }
+
+    @ResponseBody
+    // @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/owners/list")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> getAllOwners() {
+        return userService.getAllOwners();
     }
 }

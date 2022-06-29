@@ -31,25 +31,22 @@ public class AuthenticationController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
 
-    private final TokenUtils tokenUtils;
-    
-    private final AuthenticationManager authenticationManager;
+	@Autowired
+	private TokenUtils tokenUtils;
 
-    private final CustomUserDetailsService userDetailsService;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-    private final UserService userService;
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
-	public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService, UserService userService) {
-		this.tokenUtils = tokenUtils;
-		this.authenticationManager = authenticationManager;
-		this.userDetailsService = userDetailsService;
-		this.userService = userService;
-	}
+	@Autowired
+	private UserService userService;
 
 	//log in endpoint
-    @PostMapping("/login")
+	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
-			HttpServletResponse response) {
+																	HttpServletResponse response) {
 
 		LOG.info("Received request for login");
 
@@ -65,23 +62,23 @@ public class AuthenticationController {
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
-        String fingerprint = tokenUtils.generateFingerprint();
-        String jwt = tokenUtils.generateToken(user.getUsername(), fingerprint);
-        int expiresIn = tokenUtils.getExpiredIn();
+		String fingerprint = tokenUtils.generateFingerprint();
+		String jwt = tokenUtils.generateToken(user.getUsername(), fingerprint);
+		int expiresIn = tokenUtils.getExpiredIn();
 
 		UserTokenState userTokenState = new UserTokenState(jwt, expiresIn);
 		userTokenState.setUsername(user.getUsername());
 		userTokenState.setRole(user.getRole().name());
 
-        // Kreiraj cookie
-        // String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
-        String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
+		// Kreiraj cookie
+		// String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
+		String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", cookie);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Set-Cookie", cookie);
 
-        // Vrati token kao odgovor na uspesnu autentifikaciju
-        return ResponseEntity.ok().headers(headers).body(userTokenState);
+		// Vrati token kao odgovor na uspesnu autentifikaciju
+		return ResponseEntity.ok().headers(headers).body(userTokenState);
 	}
 
 	@PostMapping("/logout")
@@ -97,8 +94,8 @@ public class AuthenticationController {
 		response.addCookie(cookie);
 	}
 
-    // //refresh endpoint
-    // @PostMapping(value = "/refresh")
+	// //refresh endpoint
+	// @PostMapping(value = "/refresh")
 	// public void refreshAuthenticationToken(HttpServletRequest request) {
 
 	// 	String token = tokenUtils.getToken(request);
@@ -115,5 +112,6 @@ public class AuthenticationController {
 	// 	}
 	// }
 
-    
+
+
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(long id);
-  
+
     Optional<User> findByUsername(String username);
 
     Optional<User> findByUsernameAndDeletedIsFalseAndBlockedIsFalse(String username);
@@ -21,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByIdAndDeletedIsFalse(long id);
 
+    List<User> findByRoleAndDeletedIsFalse(@Param("role") UserRole role);
 
     List<User> findByRoleNotAndDeletedIsFalse(@Param("role") String role);
 

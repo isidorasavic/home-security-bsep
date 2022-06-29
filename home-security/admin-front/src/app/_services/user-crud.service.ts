@@ -18,7 +18,7 @@ export class UserCRUDService {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
-    return this.http.post(this.API_URL_ADMIN + '/addUser', user,{headers: headers});
+    return this.http.post(this.API_URL_HOME + '/addUser', user,{headers: headers});
   }
 
   listUsers(): Observable<any>{  

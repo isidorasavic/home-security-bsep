@@ -24,18 +24,15 @@ import java.util.Optional;
 public class UserService implements UserDetailsService{
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    private final ObjectRepository objectRepository;
+    @Autowired
+    private ObjectRepository objectRepository;
 
 
-    private final UserRepository userRepository;
-
-    public UserService(PasswordEncoder passwordEncoder, ObjectRepository objectRepository, UserRepository userRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.objectRepository = objectRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     public User findById(Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -126,7 +123,7 @@ public class UserService implements UserDetailsService{
 
     public UserDTO blockUnblockUser(long id) {
         Optional<User> optionalUser = userRepository.findByIdAndDeletedIsFalse(id);
-            if (optionalUser.isEmpty()) throw new UserNotFoundException("User not found!");
+        if (optionalUser.isEmpty()) throw new UserNotFoundException("User not found!");
         User user = optionalUser.get();
         user.setBlocked(!user.getBlocked());
         userRepository.saveAndFlush(user);
@@ -137,6 +134,14 @@ public class UserService implements UserDetailsService{
         Optional<User> optUser = userRepository.findById(id);
         if(optUser.isPresent())return optUser.get();
         throw new UserNotFoundException("User not found!");
+    }
+
+    public List<UserDTO> getAllOwners(){
+        List<UserDTO> users = new ArrayList<>();
+        userRepository.findByRoleAndDeletedIsFalse(UserRole.OWNER).forEach(user -> {
+            users.add(new UserDTO(user));
+        });
+        return users;
     }
 
 }

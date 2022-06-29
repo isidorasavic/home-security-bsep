@@ -25,22 +25,18 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	public WebSecurityConfiguration(CustomUserDetailsService jwtUserDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, TokenUtils tokenUtils) {
-		this.jwtUserDetailsService = jwtUserDetailsService;
-		this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-		this.tokenUtils = tokenUtils;
-	}
-
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(10);
 	}
 
 	// Servis koji se koristi za citanje podataka o korisnicima aplikacije
-	public final CustomUserDetailsService jwtUserDetailsService;
+	@Autowired
+	public CustomUserDetailsService jwtUserDetailsService;
 
 	// Handler za vracanje 401 kada klijent sa neodogovarajucim korisnickim imenom i lozinkom pokusa da pristupi resursu
-	private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	@Autowired
+	private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
 	// Registrujemo authentication manager koji ce da uradi autentifikaciju korisnika za nas
 	@Bean
@@ -55,34 +51,35 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	// Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
-	private final TokenUtils tokenUtils;
-    
+	@Autowired
+	private TokenUtils tokenUtils;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
 
-        http
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and() // No session will be created or used by spring security
-			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
-        .and()
-            .authorizeRequests()
-				.antMatchers("/api/**").permitAll() // TODO: ispraviti
-                .anyRequest().authenticated() // protect all other requests
-		.and()
-			.cors()
-		.and()
-			// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
-			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+
 		http
-			.headers()
-			.xssProtection()
-			.and()
-			.contentSecurityPolicy("script-src 'self'");
-			
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and() // No session will be created or used by spring security
+				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
+				.and()
+				.authorizeRequests()
+				.antMatchers("/api/**").permitAll() // TODO: ispraviti
+				.anyRequest().authenticated() // protect all other requests
+				.and()
+				.cors()
+				.and()
+				// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
+				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+		http
+				.headers()
+				.xssProtection()
+				.and()
+				.contentSecurityPolicy("script-src 'self'");
+
 
 		http.csrf().disable(); // disable cross site request forgery, as we don't use cookies - otherwise ALL PUT, POST, DELETE will get HTTP 403!
-    }
+	}
 
 	// Generalna bezbednost aplikacije
 	@Override
