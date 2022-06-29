@@ -39,10 +39,10 @@ export class UserCRUDService {
     return this.http.get(this.API_URL_HOME + '/search/'+id,{headers: headers});
   }
 
-  changeRoleUser(id:string,role:string): Observable<any>{  
+  changeRoleUser(username:string,role:string): Observable<any>{  
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
-    return this.http.put(this.API_URL_HOME + '/changeRole',{},{params:{"username":id,"newRole":role}});
+    return this.http.put(this.API_URL_HOME + '/changeRoleUsername',{},{params:{"username":username,"newRole":role}});
   }
 }

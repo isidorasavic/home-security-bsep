@@ -104,6 +104,31 @@ public class UserService implements UserDetailsService{
         return new UserDTO(user);
     }
 
+    public UserDTO changeRoleUsername(String username,String newRole){
+        UserRole role;
+        try{
+            role = UserRole.valueOf(newRole);
+        }
+        catch (Exception e){
+            throw new RoleNotFound("Role not found!");
+        }
+        Optional<User> userOptional = userRepository.findByUsernameAndDeletedIsFalse(username);
+        if (userOptional.isEmpty()){
+            throw new UsernameNotFoundException("User not found!");
+        }
+        User user = userOptional.get();
+
+        if(user.getRole() == UserRole.ADMIN) throw new InvalidArgumentException("Admin can't change role!");
+
+        if (objectRepository.findAllByOwnerId(user.getId()).size()!= 0 && user.getRole() == UserRole.OWNER && role==UserRole.TENANT) {
+            throw new UserContainsObjectsException("User owns objects and can't be turned to tennant!");
+        }
+
+        user.setRole(role);
+        userRepository.saveAndFlush(user);
+        return new UserDTO(user);
+    }
+
     public UserDTO addUser(UserDTO userDTO){
         LOG.info("Recived request to add user: "+userDTO.toString());
         if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
