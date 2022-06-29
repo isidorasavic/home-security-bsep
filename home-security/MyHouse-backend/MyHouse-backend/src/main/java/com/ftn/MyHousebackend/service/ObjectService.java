@@ -116,7 +116,7 @@ public class ObjectService {
         LocalDate startDate = LocalDate.parse(dateFrom, DateTimeFormatter.ofPattern("MMM dd yyyy"));
         LocalDate endDate = LocalDate.parse(dateTo, DateTimeFormatter.ofPattern("MMM dd yyyy"));
 
-        List<ObjectMessage> messages = objectMessageRepository.findAllByObject_IdAndDateIsAfterAndDateIsBeforeAndMessageTypeIsNotOrderByDate(id, startDate, endDate, MessageType.MESSAGE);
+        List<ObjectMessage> messages = objectMessageRepository.findAllByObject_IdAndDateIsAfterAndDateIsBeforeAndMessageTypeIsNotOrderByDateAsc(id, startDate, endDate, MessageType.MESSAGE);
 
         ReportDTO report = new ReportDTO();
         report.setObject(new ObjectDTO(object));

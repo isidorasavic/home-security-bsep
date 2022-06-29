@@ -33,7 +33,6 @@ public class DeviceService {
         return deviceDTOS;
     }
 
-    // TODO: SLATI NOVI DEVICE NA TRECI BEK VRV
     public DeviceDTO addDevice(DeviceDTO deviceDTO){
 
         Optional<Object> optionalObject = objectRepository.findById(deviceDTO.getObjectId());

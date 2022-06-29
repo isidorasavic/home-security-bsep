@@ -55,6 +55,18 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  connect(): void {
+    var url = 'http://localhost:8081/api/addMessage';/*[['ws://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/web-socket}]]*/ 'ws://localhost:8080/web-socket';
+    const ws = new WebSocket(url);
+    ws.onopen = function () {
+        console.log('connection opened');
+
+    };
+    ws.onmessage = function (data) {
+      console.log('recieved notification!');
+    };
+  }
+
   selectObject(index:number): void {
     console.log(index);
     this.selectedObject = this.objectsList[index];

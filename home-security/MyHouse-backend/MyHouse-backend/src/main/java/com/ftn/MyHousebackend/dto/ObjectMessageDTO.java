@@ -26,7 +26,7 @@ public class ObjectMessageDTO {
         this.message = objectMessage.getMessage();
         this.objectId = objectMessage.getObject().getId();
         this.date = objectMessage.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        this.time = objectMessage.getTime().toString();
+        this.time = objectMessage.getTime().format(DateTimeFormatter.ofPattern("mm:HH"));
     }
 
     public ObjectMessageDTO() {
