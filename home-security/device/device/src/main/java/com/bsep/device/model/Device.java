@@ -26,4 +26,5 @@ public class Device {
     @Column(name="device_type", nullable = false)
     private String  deviceType;
 
+
 }

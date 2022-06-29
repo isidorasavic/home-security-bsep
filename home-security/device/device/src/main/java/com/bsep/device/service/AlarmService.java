@@ -31,25 +31,26 @@ public class AlarmService {
     private static final Logger LOG = LoggerFactory.getLogger(AlarmService.class);
 
     public static void generateAlarms(){
-        Device dev1 = new Device();
-        dev1.setId(1L);
-        dev1.setObjectId(1L);
-        dev1.setDeviceType("LIGHT");
+        Device dev1 = new Device(1L, 1L,  "LIGHT");
+        Device dev2 = new Device(2L, 1L, "DOOT");
+        DeviceDTO dev1DTO = new DeviceDTO(dev1);
+        DeviceDTO dev2DTO = new DeviceDTO(dev2);
 
-        Device dev2 = new Device();
-        dev2.setId(2L);
-        dev2.setObjectId(1L);
-        dev2.setDeviceType("DOOR");
+        Alarm a1 = new Alarm("MESSAGE", 1L, dev2DTO, "Door opened", null, null);
+        Alarm a2 = new Alarm("ALARM", 1L, dev2DTO, "Door opened for more than 10 minutes", null, null);
+        Alarm a3 = new Alarm("WARNING", 1L, dev2DTO, "Door opened 3 times in a row", null, null);
+        Alarm a4 = new Alarm("MESSAGE", 1L, dev1DTO, "Light turned off", null, null);
+        Alarm a5 = new Alarm("ALARM", 1L, dev1DTO, "Light on for more than 24 hours", null, null);
+        Alarm a6 = new Alarm("WARNING", 1L, dev1DTO, "Light turned on/off three times in a minute", null, null);
 
-        List<String> alarmTypes = new ArrayList<>();
-        alarmTypes.add("WARNING");
-        alarmTypes.add("MESSAGE");
-        alarmTypes.add("ALARM");
+        List<Alarm> alarms = new ArrayList<>();
+        alarms.add(a1);
+        alarms.add(a2);
+        alarms.add(a3);
+        alarms.add(a4);
+        alarms.add(a5);
+        alarms.add(a6);
 
-
-        List<Device> devices = new ArrayList<>();
-        devices.add(dev1);
-        devices.add(dev2);
 
         Timer timer = new Timer();
         int begin = 1000; //timer starts after 1 second.
@@ -59,21 +60,10 @@ public class AlarmService {
             @Override
             public void run() {
                 LOG.info(":)");
-                int randomIndex = (int)(Math.random()*(devices.size()));
-                Device selectedDevice = devices.get(randomIndex);
-                Alarm alarm = new Alarm();
+                int randomIndex = (int)(Math.random()*(alarms.size()));
+                Alarm alarm = alarms.get(randomIndex);
                 alarm.setDate(LocalDate.now().toString());
                 alarm.setTime(LocalTime.now().toString());
-                alarm.setDevice(new DeviceDTO(selectedDevice));
-                alarm.setObjectId(selectedDevice.getObjectId());
-
-                randomIndex = (int)(Math.random()*(3));
-                alarm.setMessageType(alarmTypes.get(randomIndex));
-
-                if (alarm.getMessageType().equals("MESSAGE")) alarm.setMessage("Message: .... :)");
-                if (alarm.getMessageType().equals("WARNING")) alarm.setMessage("Warning: .... :|");
-                if (alarm.getMessageType().equals("ALARM")) alarm.setMessage("Alarm!!: .... :(");
-
                 sendMessage(alarm);
 
             }
@@ -91,6 +81,6 @@ public class AlarmService {
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.postForObject(uri, httpEntity, Alarm.class);
-        LOG.info("Finished comunicating with MyHouse.");
+        LOG.info("Sent message to MyHouse.");
     }
 }

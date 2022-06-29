@@ -4,12 +4,14 @@ import com.ftn.MyHousebackend.model.Object;
 import com.ftn.MyHousebackend.model.User;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class ObjectDTO {
 
     private long id;

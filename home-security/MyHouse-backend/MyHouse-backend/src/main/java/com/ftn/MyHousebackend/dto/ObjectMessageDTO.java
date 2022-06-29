@@ -1,15 +1,13 @@
 package com.ftn.MyHousebackend.dto;
 
 import com.ftn.MyHousebackend.model.ObjectMessage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
+@ToString
 public class ObjectMessageDTO {
 
     private String messageType;

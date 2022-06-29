@@ -1,5 +1,6 @@
 package com.ftn.MyHousebackend.service;
 
+import com.ftn.MyHousebackend.controller.AuthenticationController;
 import com.ftn.MyHousebackend.dto.ObjectMessageDTO;
 import com.ftn.MyHousebackend.exception.ObjectNotFound;
 import com.ftn.MyHousebackend.model.Device;
@@ -9,6 +10,8 @@ import com.ftn.MyHousebackend.model.enums.MessageType;
 import com.ftn.MyHousebackend.repository.DeviceRepository;
 import com.ftn.MyHousebackend.repository.ObjectMessageRepository;
 import com.ftn.MyHousebackend.repository.ObjectRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,9 @@ import java.util.Optional;
 
 @Service
 public class ObjectMessageService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectMessageService.class);
+
 
     @Autowired
     private ObjectMessageRepository objectMessageRepository;
@@ -48,7 +54,7 @@ public class ObjectMessageService {
         return messages;
     }
 
-    public void addMessage(ObjectMessageDTO newMessage) {
+    public ObjectMessageDTO addMessage(ObjectMessageDTO newMessage) {
         ObjectMessage message = new ObjectMessage();
         message.setMessage(newMessage.getMessage());
         message.setMessageType(MessageType.valueOf(newMessage.getMessageType()));
@@ -66,6 +72,7 @@ public class ObjectMessageService {
 
         objectMessageRepository.saveAndFlush(message);
 
+        return new ObjectMessageDTO(message);
 
     }
 
