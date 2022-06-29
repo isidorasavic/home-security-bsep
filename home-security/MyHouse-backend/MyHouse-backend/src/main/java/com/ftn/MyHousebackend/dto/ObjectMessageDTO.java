@@ -1,15 +1,13 @@
 package com.ftn.MyHousebackend.dto;
 
 import com.ftn.MyHousebackend.model.ObjectMessage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
+@ToString
 public class ObjectMessageDTO {
 
     private String messageType;
@@ -26,7 +24,7 @@ public class ObjectMessageDTO {
         this.message = objectMessage.getMessage();
         this.objectId = objectMessage.getObject().getId();
         this.date = objectMessage.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        this.time = objectMessage.getTime().toString();
+        this.time = objectMessage.getTime().format(DateTimeFormatter.ofPattern("mm:HH"));
     }
 
     public ObjectMessageDTO() {

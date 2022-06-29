@@ -2,8 +2,11 @@
     <h1 mat-dialog-title class="title">Report</h1>
     <mat-dialog-content>
         <h2>Object: {{data.report.object.name}}</h2>
-        <h3>Date period {{data.report.dateFrom}}-{{data.report.dateTo}}</h3>
-        <table class="messages-table">
+        <h3>Date period: {{data.report.dateFrom}} - {{data.report.dateTo}}</h3>
+        <p *ngIf="data.report.messages.length !== 0">
+            Total of <b>{{data.report.messages.length}}</b> alarms.
+        </p>
+        <table class="messages-table" *ngIf="data.report.messages.length !== 0">
             <tr>
             <th></th>
             <th>Device</th>
@@ -19,6 +22,9 @@
             <td>{{message.time}}</td>
             </tr>
         </table>
+        <p *ngIf="data.report.messages.length === 0">
+            There were no alarms in this period!
+        </p>
 
     </mat-dialog-content> 
 

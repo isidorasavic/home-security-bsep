@@ -18,6 +18,7 @@ export class ReportModal implements OnInit {
      }
 
   ngOnInit(): void {
+    console.log(this.data.report)
   }
 
 

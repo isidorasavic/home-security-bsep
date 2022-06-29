@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   selectedDevice: number;
   userRole: string;
   report: Report;
-  constructor(private objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
+  constructor(public objectService: ObjectService, private tokenStorage: TokenStorageService, public dialog: MatDialog, public router: Router) { 
     this.objectsList = [];
     this.selectedObject = new Object();
     this.messagesList = [];
@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
         console.log((err.error).message);
       }
     );
+    // setInterval(this.getDeviceMessages, 7000); 
   }
 
   selectObject(index:number): void {
@@ -92,7 +93,7 @@ export class HomeComponent implements OnInit {
       (err:any) => {
         console.log((err.error).message);
       }
-    );
+      );
     }
     
   }
@@ -170,3 +171,5 @@ export class HomeComponent implements OnInit {
     });
   }
 }
+
+

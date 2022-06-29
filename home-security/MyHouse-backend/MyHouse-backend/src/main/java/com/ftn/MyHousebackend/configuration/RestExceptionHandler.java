@@ -56,6 +56,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(error);
     }
 
+    @ExceptionHandler(LogInFailedException.class)
+    protected ResponseEntity<Object> handleLogInFailedException(LogInFailedException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN);
+        error.setMessage(e.getMessage());
+        return buildResponseEntity(error);
+    }
+
     private ResponseEntity<Object> buildResponseEntity(ErrorResponse error) {
         return new ResponseEntity<>(error, error.getStatus());
     }

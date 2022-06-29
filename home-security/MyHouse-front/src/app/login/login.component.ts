@@ -37,12 +37,12 @@ export class LoginComponent implements OnInit {
         console.log(data)
         this.isLoggedIn = true;
         this.isLoginFailed = false;
-        //TODO: u zavisnosti od tipa korisnika, redirectuje na druga mesta
         this.router.navigate(['/home']);
       },
     error: (err: any) => {
-      console.log(err.error)
-      this.errorMessage = "Bad creditentials!";  //TODO: ulepsati jer je gadno hehe
+      console.log("Error:", err.status)
+      if (err.status === 403) this.errorMessage = "Login failed 5 times in a row! Please contact admin to unblock yout account"
+      else this.errorMessage = "Bad creditentials!";
       this.isLoginFailed = true;
     }
   });
