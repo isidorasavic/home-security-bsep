@@ -1,5 +1,6 @@
 package com.ftn.MyHousebackend.controller;
 
+import com.ftn.MyHousebackend.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -96,7 +97,8 @@ public class AuthenticationController {
 		catch (Exception e){
 			if (userService.doesUserExist(authenticationRequest.getUsername())){
 				LOG.info("Adding failed login to user: "+authenticationRequest.getUsername());
-				userService.addFailedLogin(authenticationRequest.getUsername());
+				UserDTO editedUser = userService.addFailedLogin(authenticationRequest.getUsername());
+				if (editedUser.isBlocked()) return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 			}
 			LOG.info("Authentication fail caught!");
